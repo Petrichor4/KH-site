@@ -15,18 +15,19 @@ import {
 } from "@/components/ui/drawer";
 
 export default function Nav() {
-  const [size, setSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
-  useEffect(() => {
-    const handleResize = () =>
-      setSize({ width: window.innerWidth, height: window.innerHeight });
+  const [size, setSize] = useState<{ width: number; height: number } | null>(null);
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const updateSize = () => setSize({ width: window.innerWidth, height: window.innerHeight });
+      updateSize(); // Set initial size immediately
+      window.addEventListener("resize", updateSize);
+      return () => window.removeEventListener("resize", updateSize);
+    }
   }, []);
 
+  // Prevent rendering until size is determined
+  if (!size) return null;
   return (
     <nav className="absolute top-4 right-4">
       {size.width >= 768 ? (
