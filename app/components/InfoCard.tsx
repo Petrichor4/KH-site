@@ -25,14 +25,14 @@ export default function InfoCard({
   
   return (
     <div className="flex p-3 justify-around">
-      <div className="w-24 h-24 overflow-hidden flex justify-center items-center">
+      <div className="w-1/3 overflow-hidden flex justify-center items-center">
         <Image
           className="w-full h-full"
           src={image}
           alt="Picture of Kierstyn Hart"
         ></Image>
       </div>
-      <Text className="text-justify w-1/2">{desc}</Text>
+      <Text className="text-justify w-1/2 leading-none">{desc}</Text>
     </div>
   );
 }
