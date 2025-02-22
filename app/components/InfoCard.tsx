@@ -24,7 +24,7 @@ export default function InfoCard({
     if (!size) return null;
   
   return (
-    <div className="flex p-3 justify-around">
+    <div className="flex p-2 pt-6 justify-around">
       <div className="w-1/3 overflow-hidden flex justify-center items-center">
         <Image
           className="w-full h-full"
