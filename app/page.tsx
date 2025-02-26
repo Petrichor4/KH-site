@@ -48,7 +48,9 @@ export default function Home() {
         </div>
         <InfoCard image={headerData[0]?.portrait} desc={headerData[0]?.about_me} />
       </header>
-      <main></main>
+      <main>
+        <h2 className="text-center text-3xl p-4">Books</h2>
+      </main>
     </>
   );
 }

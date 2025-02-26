@@ -58,7 +58,7 @@ export default function Nav() {
             </DrawerHeader>
             <DrawerBody className="flex justify-center mt-8">
               <div className="flex flex-col text-5xl gap-6">
-                <Link href={"/"} className="active:underline">
+                <Link href={"/blog"} className="active:underline">
                   <h2>Blog</h2>
                 </Link>
                 <Link
