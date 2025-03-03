@@ -4,7 +4,7 @@ import { addUser } from "@/app/lib/actions";
 
 export async function POST(req: Request) {
   try {
-    const { username, password, contact } = await req.json();
+    const { username, password } = await req.json();
     const validCredentials = z.object({
       username: z.string(),
       password: z.string().min(6),
@@ -12,8 +12,8 @@ export async function POST(req: Request) {
     if (!validCredentials) {
       return NextResponse.json("", { status: 400 });
     }
-    await addUser(username, password, contact);
-    console.log({ username, password, contact })
+    await addUser(username, password);
+    console.log({ username, password })
     return NextResponse.json({message: "success"})
   } catch (error) {
     console.error(error);

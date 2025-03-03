@@ -5,8 +5,22 @@ export interface HeaderData {
 }
 
 export interface Blog {
-    id: string;
-    title: string;
-    photo: string;
-    post: string;
+  id: string;
+  title: string;
+  photo: string;
+  post: string;
+}
+
+export interface User {
+  id: string;
+  username: string;
+  password: string;
+  admin: boolean;
+}
+
+export interface Writing {
+  id: string;
+  title: string;
+  content: string;
+  photo: string;
 }

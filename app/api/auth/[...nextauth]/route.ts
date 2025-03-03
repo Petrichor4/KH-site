@@ -16,14 +16,14 @@ const handler = NextAuth({
       async authorize(credentials) {
         //
 
-        // console.log(credentials)
+        console.log(credentials)
 
         if (!credentials?.username) {
           return null;
         }
         const response = await getUserByUsername(credentials.username);
         
-        // console.log({ response });
+        console.log({ response });
 
         if (!response) {
           return null;
@@ -35,12 +35,12 @@ const handler = NextAuth({
           user.password
         );
 
-        // console.log(passwordCorrect)
+        console.log(passwordCorrect)
 
         if (passwordCorrect) {
           return {
             id: user.id,
-            name: user.username,
+            name: user.username
           };
         }
         return null;
@@ -48,8 +48,8 @@ const handler = NextAuth({
     }),
   ],
   pages: {
-    signIn: '/',
-    error: '/'
+    signIn: '/login',
+    error: '/login'
   }
 });
 
