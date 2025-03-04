@@ -1,11 +1,12 @@
 "use client";
 import { Monsieur_La_Doulaise } from "next/font/google";
 import Nav from "./components/nav";
-import { Image } from "@chakra-ui/react";
+import { Image, SimpleGrid } from "@chakra-ui/react";
 import InfoCard from "./components/InfoCard";
 import { useState, useEffect } from 'react';
-import { HeaderData } from "./lib/definitions";
-import { getHeaderData } from "./lib/actions";
+import { HeaderData, Book } from "./lib/definitions";
+import { getBooks, getHeaderData } from "./lib/actions";
+import BookCard from "./components/bookCard";
 
 const monsieurLaDoulaise = Monsieur_La_Doulaise({
   weight: "400",
@@ -16,6 +17,7 @@ const monsieurLaDoulaise = Monsieur_La_Doulaise({
 
 export default function Home() {
     const [headerData, setHeaderData] = useState<HeaderData[]>([]);
+    const [books, setBooks] = useState<Book[]>([]);
   
     console.log(headerData);
   
@@ -28,6 +30,14 @@ export default function Home() {
       };
       fetchData();
     }, []);
+
+    useEffect(() => {
+      const fetchBooks = async() => {
+        const response = await getBooks();
+        setBooks(response) 
+      }
+      fetchBooks();
+    },[])
   
   return (
     <>
@@ -49,7 +59,14 @@ export default function Home() {
         <InfoCard image={headerData[0]?.portrait} desc={headerData[0]?.about_me} />
       </header>
       <main>
-        <h2 className="text-center text-3xl p-4">Books</h2>
+        <h2 className="text-center text-3xl md:text-5xl p-4">Books</h2>
+          <SimpleGrid columns={{base: 2, md: 3}} p={4}>
+            {books.map((book, index) => (
+                <div className="flex justify-center my-2.5" key={index}>
+                  <BookCard book={book}/>
+                </div>
+            ))}
+          </SimpleGrid>
       </main>
     </>
   );

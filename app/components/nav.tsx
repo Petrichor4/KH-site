@@ -51,7 +51,7 @@ export default function Nav() {
           <DrawerTrigger>
             <VscMenu size={30} />
           </DrawerTrigger>
-          <DrawerContent>
+          <DrawerContent bg={"white"}>
             <DrawerCloseTrigger />
             <DrawerHeader>
               <DrawerTitle />

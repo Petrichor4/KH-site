@@ -24,3 +24,11 @@ export interface Writing {
   content: string;
   photo: string;
 }
+
+export interface Book {
+  id: string;
+  title: string;
+  photo: string;
+  price: string;
+  links: string[];
+}

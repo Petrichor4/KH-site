@@ -1,7 +1,7 @@
 "use server";
 
 import { sql } from "@vercel/postgres";
-import { Blog, HeaderData, User, Writing } from "./definitions";
+import { Blog, Book, HeaderData, User, Writing } from "./definitions";
 import bcrypt from "bcrypt";
 
 export async function getHeaderData(): Promise<HeaderData[]> {
@@ -115,17 +115,17 @@ export async function deleteBlogPost(id: string) {
     console.error(error);
   }
 }
-export async function addWritingPost(photo: string, title: string, post: string) {
+export async function addWritingPost(photo: string, title: string, content: string) {
   try {
-    await sql`INSERT INTO writings (photo, title, post) VALUES (${photo}, ${title}, ${post})`
+    await sql`INSERT INTO writings (photo, title, content) VALUES (${photo}, ${title}, ${content})`
   } catch (error) {
     console.log(error)
   }
 }
 
-export async function editWritingPost(photo: string, title: string, post: string, id: string) {
+export async function editWritingPost(photo: string, title: string, content: string, id: string) {
   try {
-    await sql`UPDATE writings SET photo =${photo}, title = ${title}, post = ${post} WHERE id = ${id}`
+    await sql`UPDATE writings SET photo =${photo}, title = ${title}, content = ${content} WHERE id = ${id}`
   } catch (error) {
     console.log(error)
   }
@@ -136,5 +136,15 @@ export async function deleteWritingPost(id: string) {
     await sql`DELETE FROM writings WHERE id = ${id}`
   } catch (error) {
     console.error(error);
+  }
+}
+
+export async function getBooks() {
+  try {
+    const result = await sql<Book>`SELECT * FROM books`
+    return result.rows;
+  } catch (error) {
+    console.error(error);
+    return []
   }
 }

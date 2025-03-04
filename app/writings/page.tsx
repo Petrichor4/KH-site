@@ -134,7 +134,7 @@ export default function Writings() {
       <main>
         {isAdmin && (
           <IconButton
-            variant={"outline"}
+            variant={"ghost"}
             className="active:scale-95"
             m={3}
             p={3}

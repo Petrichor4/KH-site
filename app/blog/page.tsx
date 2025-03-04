@@ -30,7 +30,7 @@ export default function BlogPage() {
   const [post, setPost] = useState("");
   const [loading, setLoading] = useState(false);
 
-  console.log(isAdmin);
+  // console.log(isAdmin);
 
   const modules = {
     toolbar: [
@@ -120,14 +120,14 @@ export default function BlogPage() {
         <Link className="absolute top-4 right-4" href={"/login"}>
           {session ? (
             <Button
-              className="text-xl hover:text-black"
+              className="text-xl"
               variant={"ghost"}
               onClick={() => signOut()}
             >
               Sign Out
             </Button>
           ) : (
-            <Button className="text-xl hover:text-black" variant={"ghost"}>
+            <Button className="text-xl" variant={"ghost"}>
               Sign In/ Sign Up
             </Button>
           )}
@@ -136,7 +136,7 @@ export default function BlogPage() {
       <main>
         {isAdmin && (
           <IconButton
-            variant={"outline"}
+            variant={"ghost"}
             className="active:scale-95"
             m={3}
             p={3}

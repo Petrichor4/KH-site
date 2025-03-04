@@ -27,16 +27,16 @@ const CustomModal: React.FC<ModalProps> = ({ isOpen, onClose, title, children })
         padding="4"
         borderRadius="md"
         boxShadow="lg"
-        backgroundColor={"Window"}
+        backgroundColor={"white"}
         maxH={'75%'}
         width={{ base: "90%", md: "70%" }}
         className="modal"
-        color={'WindowText'}
+        color={'black'}
         overflow={"auto"}
       >
         <Flex justifyContent="space-between" alignItems="center" mb="4">
           <Text fontSize="xl" fontWeight="bold">{title}</Text>
-          <IconButton size="sm" bg={"#828698"} rounded={"full"} onClick={onClose}><HiOutlineX /></IconButton>
+          <IconButton size="sm" bg={"#828698"} _hover={{bg: "#828698",opacity: "50%"}} rounded={"full"} onClick={onClose}><HiOutlineX /></IconButton>
         </Flex>
         {children}
       </Box>

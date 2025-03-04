@@ -6,6 +6,10 @@ import { compare } from "bcrypt";
 const handler = NextAuth({
   session: {
     strategy: "jwt",
+    maxAge: 2 * 60 * 60,
+  },
+  jwt: {
+    maxAge: 2 * 60 * 60,
   },
   providers: [
     CredentialsProvider({
@@ -50,7 +54,7 @@ const handler = NextAuth({
   pages: {
     signIn: '/login',
     error: '/login'
-  }
+  },
 });
 
 export { handler as GET, handler as POST };

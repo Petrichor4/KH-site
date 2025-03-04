@@ -149,7 +149,7 @@ export default function WritingsPost() {
           <HiArrowLeft size={40} />
         </Link>
         {isAdmin && (
-          <Button size={"lg"} onClick={() => setVisible(true)}>
+          <Button fontSize={"2xl"} variant={"ghost"} size={"lg"} onClick={() => setVisible(true)}>
             Edit
           </Button>
         )}
