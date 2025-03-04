@@ -42,12 +42,11 @@ export default function Login() {
         password: password,
       }),
     });
-    console.log("username length:", username.toString().length)
+    console.log("username length:", username.toString().length);
     setAlert("account created succesfully!");
     setLoading(false);
     setLogIn(true);
   };
-
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -87,68 +86,84 @@ export default function Login() {
   return (
     <main className="flex justify-center items-center h-screen">
       {logIn ? (
-              <form
-              onSubmit={handleLogin}
-              className="h-1/2 w-1/2 bg-white p-4 rounded-xl flex justify-center items-center flex-col relative shadow-xl"
+        <form
+          onSubmit={handleLogin}
+          className="md:h-fit md:w-1/2 w-11/12 h-fit min-w-[355px] min-h-[400px] bg-white p-4 rounded-xl flex justify-around items-center flex-col relative shadow-xl"
+        >
+          <Stack gap={8} className="w-full md:w-2/3">
+          <h2 className="text-3xl text-center">Sign in</h2>
+            <Field.Root invalid={!!alert}>
+              <Field.Label fontSize={"xl"}>Username</Field.Label>
+              <Input name="username" />
+              <Field.ErrorText>{alert}</Field.ErrorText>
+            </Field.Root>
+            <Field.Root invalid={!!alert}>
+              <Field.Label fontSize={"xl"}>Password</Field.Label>
+              <Input name="password" />
+              <Field.ErrorText>{alert}</Field.ErrorText>
+            </Field.Root>
+            <Button
+              type="submit"
+              loading={loading}
+              loadingText="Signing In"
+              className="self-end active:opacity-75"
             >
-                <h2 className="text-3xl absolute top-8">Sign in</h2>
-              <Stack gap={8} className="w-2/3">
-                <Field.Root invalid={!!alert}>
-                  <Field.Label fontSize={"xl"}>Username</Field.Label>
-                  <Input name="username" />
-                  <Field.ErrorText>{alert}</Field.ErrorText>
-                </Field.Root>
-                <Field.Root invalid={!!alert}>
-                  <Field.Label fontSize={"xl"}>Password</Field.Label>
-                  <Input name="password" />
-                  <Field.ErrorText>{alert}</Field.ErrorText>
-                </Field.Root>
-                <Button
-                  type="submit"
-                  loading={loading}
-                  loadingText="Signing In"
-                  className="self-end active:opacity-75"
-                >
-                  Sign In
-                </Button>
-              </Stack>
-              <p className="absolute bottom-4 right-4 text-xl">Dont have an account? <button onClick={() => setLogIn(false)} type="button" className="hover:underline hover:cursor-pointer">Create one here</button></p>
-            </form>
-      
+              Sign In
+            </Button>
+          </Stack>
+          <p className="text-xl">
+            Dont have an account?{" "}
+            <button
+              onClick={() => setLogIn(false)}
+              type="button"
+              className="hover:underline hover:cursor-pointer text-black"
+            >
+              Create one here
+            </button>
+          </p>
+        </form>
       ) : (
         <form
-        onSubmit={handleRegister}
-        className="h-1/2 w-1/2 bg-white p-4 rounded-xl flex justify-center items-center flex-col relative shadow-xl"
-      >
-          <h2 className="text-3xl absolute top-8">Sign Up</h2>
-        <Stack gap={8} className="w-2/3">
-          <Field.Root invalid={!!alert}>
-            <Field.Label fontSize={"xl"}>Username</Field.Label>
-            <Input name="username" size={"lg"} fontSize={"lg"} />
-            <Field.ErrorText>{alert}</Field.ErrorText>
-          </Field.Root>
-          <Field.Root invalid={!!alert}>
-            <Field.Label fontSize={"xl"}>Password</Field.Label>
-            <Input name="password" size={"lg"} fontSize={"lg"} />
-            <Field.ErrorText>{alert}</Field.ErrorText>
-          </Field.Root>
-          <Field.Root invalid={!!alert}>
-            <Field.Label fontSize={"xl"}>Confirm Password</Field.Label>
-            <Input name="password-confirm" size={"lg"} fontSize={"lg"} />
-            <Field.ErrorText>{alert}</Field.ErrorText>
-          </Field.Root>
-          <Button
-            type="submit"
-            loading={loading}
-            loadingText="Creating account"
-            className="self-end active:opacity-75"
-          >
-            Sign Up
-          </Button>
-          <p className="absolute bottom-4 right-4 text-xl">Have an account? <button onClick={() => setLogIn(true)} type="button" className="hover:underline hover:cursor-pointer">Sign in here</button></p>
-        </Stack>
-      </form>
-
+          onSubmit={handleRegister}
+          className="md:h-fit md:w-1/2 w-11/12 h-fit min-w-[355px] min-h-[400px] bg-white p-4 rounded-xl flex justify-around items-center flex-col relative shadow-xl"
+        >
+          <Stack gap={8} className="w-full md:w-2/3">
+          <h2 className="text-3xl text-center">Sign Up</h2>
+            <Field.Root invalid={!!alert}>
+              <Field.Label fontSize={"xl"}>Username</Field.Label>
+              <Input name="username" size={"lg"} fontSize={"lg"} />
+              <Field.ErrorText>{alert}</Field.ErrorText>
+            </Field.Root>
+            <Field.Root invalid={!!alert}>
+              <Field.Label fontSize={"xl"}>Password</Field.Label>
+              <Input name="password" size={"lg"} fontSize={"lg"} />
+              <Field.ErrorText>{alert}</Field.ErrorText>
+            </Field.Root>
+            <Field.Root invalid={!!alert}>
+              <Field.Label fontSize={"xl"}>Confirm Password</Field.Label>
+              <Input name="password-confirm" size={"lg"} fontSize={"lg"} />
+              <Field.ErrorText>{alert}</Field.ErrorText>
+            </Field.Root>
+            <Button
+              type="submit"
+              loading={loading}
+              loadingText="Creating account"
+              className="self-end active:opacity-75 mb-4"
+            >
+              Sign Up
+            </Button>
+          </Stack>
+            <p className="text-xl">
+              Have an account?{" "}
+              <button
+                onClick={() => setLogIn(true)}
+                type="button"
+                className="hover:underline hover:cursor-pointer text-black"
+              >
+                Sign in here
+              </button>
+            </p>
+        </form>
       )}
     </main>
   );

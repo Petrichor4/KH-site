@@ -33,6 +33,8 @@ export const DrawerCloseTrigger = React.forwardRef<
       position="absolute"
       top="1"
       insetEnd="1"
+      color={"black"}
+      border={"none"}
       {...props}
       asChild
     >

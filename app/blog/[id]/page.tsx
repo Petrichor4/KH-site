@@ -68,7 +68,7 @@ export default function BlogPost() {
     photo: "",
   });
   const [isAdmin, setIsAdmin] = useState(false);
-  const [visibile, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState("");
   const { data: session } = useSession();
@@ -115,7 +115,7 @@ export default function BlogPost() {
         alert("Please fill everything out Kierstyn!❤️");
         return;
       }
-      await editPost(photo.toString(), title.toString(), post, blog.id);
+      await editPost("blog", photo.toString(), title.toString(), post, blog.id);
     } catch (error) {
       alert(`Error adding post: ${error}`);
       setLoading(false);
@@ -129,7 +129,7 @@ export default function BlogPost() {
 
   const handleDelete = async() => {
     try {
-      await deletePost(blog.id)
+      await deletePost("blog",blog.id)
       alert("Post deleted")
       window.history.back()
     } catch (error) {
@@ -151,7 +151,7 @@ export default function BlogPost() {
         )}
       </nav>
       <main>
-        {visibile && (
+        {visible && (
           <CustomModal
             title="New Post"
             isOpen={true}
@@ -184,7 +184,7 @@ export default function BlogPost() {
                   </Field.Root>
                 </Stack>
               </Fieldset.Root>
-              <div className="flex justify-between">
+              <div className="flex justify-between mt-4">
                 <PopoverRoot closeOnInteractOutside={false}>
                   <PopoverTrigger>
                     <Button type="button" colorPalette={"red"} size={"lg"}>Delete Post</Button>
@@ -196,7 +196,7 @@ export default function BlogPost() {
                     </PopoverBody>
                   </PopoverContent>
                 </PopoverRoot>
-                <Button type="submit" size={"lg"} loading={loading}>
+                <Button type="submit" bg={"#828698"} size={"lg"} loading={loading}>
                   Post
                 </Button>
               </div>

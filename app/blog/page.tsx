@@ -20,7 +20,7 @@ import CustomModal from "../components/customModal";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 
-const ReactQuill = dynamic(() => import("react-quill-new"), {ssr: false})
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 export default function BlogPage() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -87,26 +87,26 @@ export default function BlogPage() {
     fetchAdminStatus();
   }, [session?.user?.name]);
 
-  const handlePost = async(e: FormEvent<HTMLFormElement>) => {
+  const handlePost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);    
+    setLoading(true);
     const formData = new FormData(e.currentTarget);
-    const photo = formData.get("photo")
-    const title = formData.get("title")
+    const photo = formData.get("photo");
+    const title = formData.get("title");
     try {
       if (!photo || !title) {
-        alert("Please fill everything out Kierstyn!❤️")
-        return
+        alert("Please fill everything out Kierstyn!❤️");
+        return;
       }
-      await addPost(photo.toString(), title.toString(), post);
+      await addPost("blog", photo.toString(), title.toString(), post);
     } catch (error) {
-      alert(`Error adding post: ${error}`)
+      alert(`Error adding post: ${error}`);
       setLoading(false);
       console.error(error);
     } finally {
       setLoading(false);
       setVisible(false);
-      alert("post added sucessfully!")
+      alert("post added sucessfully!");
     }
   };
 
@@ -120,14 +120,14 @@ export default function BlogPage() {
         <Link className="absolute top-4 right-4" href={"/login"}>
           {session ? (
             <Button
-              className="text-xl"
+              className="text-xl hover:text-black"
               variant={"ghost"}
               onClick={() => signOut()}
             >
               Sign Out
             </Button>
           ) : (
-            <Button className="text-xl" variant={"ghost"}>
+            <Button className="text-xl hover:text-black" variant={"ghost"}>
               Sign In/ Sign Up
             </Button>
           )}
@@ -157,29 +157,31 @@ export default function BlogPage() {
                 <Stack>
                   <Field.Root>
                     <FieldLabel>Photo</FieldLabel>
-                    <Input name="photo"/>
+                    <Input name="photo" />
                   </Field.Root>
                   <Field.Root>
                     <FieldLabel>Title</FieldLabel>
-                    <Input name="title"/>
+                    <Input name="title" />
                   </Field.Root>
                   <Field.Root>
                     <FieldLabel>Post</FieldLabel>
-                    <div className="w-full h-fit mb-[5.2%]">
+                    <div className="w-full h-fit">
                       <ReactQuill
                         theme="snow"
                         modules={modules}
                         formats={formats}
                         placeholder="Compose your epic Kierstyn Hart!"
                         onChange={(value) => setPost(value)}
-                        className="h-[300px]"
+                        className="h-1/2"
                       />
                     </div>
                   </Field.Root>
                 </Stack>
               </Fieldset.Root>
-              <div className="flex justify-end">
-                <Button type="submit" size={"lg"} loading={loading}>Post</Button>
+              <div className="flex justify-end mt-4">
+                <Button type="submit" bg={"#828698"} size={"lg"} loading={loading}>
+                  Post
+                </Button>
               </div>
             </form>
           </CustomModal>

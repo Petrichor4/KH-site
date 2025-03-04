@@ -34,9 +34,9 @@ const CustomModal: React.FC<ModalProps> = ({ isOpen, onClose, title, children })
         color={'WindowText'}
         overflow={"auto"}
       >
-        <Flex className="sticky top-0 left-0" justifyContent="space-between" alignItems="center" mb="4">
+        <Flex justifyContent="space-between" alignItems="center" mb="4">
           <Text fontSize="xl" fontWeight="bold">{title}</Text>
-          <IconButton size="sm" rounded={"full"} onClick={onClose}><HiOutlineX /></IconButton>
+          <IconButton size="sm" bg={"#828698"} rounded={"full"} onClick={onClose}><HiOutlineX /></IconButton>
         </Flex>
         {children}
       </Box>

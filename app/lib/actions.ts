@@ -92,25 +92,25 @@ export async function getWriting(id: string) {
   }
 }
 
-export async function addPost(photo: string, title: string, post: string) {
+export async function addPost(table: string, photo: string, title: string, post: string) {
   try {
-    await sql`INSERT INTO blogs (photo, title, post) VALUES (${photo}, ${title}, ${post})`
+    await sql`INSERT INTO ${table} (photo, title, post) VALUES (${photo}, ${title}, ${post})`
   } catch (error) {
     console.log(error)
   }
 }
 
-export async function editPost(photo: string, title: string, post: string, id: string) {
+export async function editPost(table: string, photo: string, title: string, post: string, id: string) {
   try {
-    await sql`UPDATE blogs SET photo =${photo}, title = ${title}, post = ${post} WHERE id = ${id}`
+    await sql`UPDATE ${table} SET photo =${photo}, title = ${title}, post = ${post} WHERE id = ${id}`
   } catch (error) {
     console.log(error)
   }
 }
 
-export async function deletePost(id: string) {
+export async function deletePost(table: string, id: string) {
   try {
-    await sql`DELETE FROM blogs WHERE id = ${id}`
+    await sql`DELETE FROM ${table} WHERE id = ${id}`
   } catch (error) {
     console.error(error);
   }

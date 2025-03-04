@@ -24,6 +24,10 @@ Button {
   color: white;
 }
 
+Button:hover {
+  color: black;
+}
+
 form > * {
   color: black;
 }
