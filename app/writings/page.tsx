@@ -16,7 +16,7 @@ import CustomCard from "../components/customCard";
 import CustomModal from "../components/customModal";
 import { Writing } from "../lib/definitions";
 import { useState, useEffect, FormEvent } from "react";
-import { getWritings, getUserAdminStatus, addPost } from "../lib/actions";
+import { getWritings, getUserAdminStatus, addWritingPost } from "../lib/actions";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 
@@ -95,7 +95,7 @@ export default function Writings() {
           alert("Please fill everything out Kierstyn!❤️");
           return;
         }
-        await addPost("writings", photo.toString(), title.toString(), post);
+        await addWritingPost(photo.toString(), title.toString(), post);
       } catch (error) {
         alert(`Error adding post: ${error}`);
         setLoading(false);

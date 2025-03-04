@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import CustomCard from "../components/customCard";
 import { Blog } from "../lib/definitions";
-import { addPost, getBlogs, getUserAdminStatus } from "../lib/actions";
+import { addBlogPost, getBlogs, getUserAdminStatus } from "../lib/actions";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { signOut, useSession } from "next-auth/react";
 import CustomModal from "../components/customModal";
@@ -98,7 +98,7 @@ export default function BlogPage() {
         alert("Please fill everything out Kierstyn!❤️");
         return;
       }
-      await addPost("blog", photo.toString(), title.toString(), post);
+      await addBlogPost(photo.toString(), title.toString(), post);
     } catch (error) {
       alert(`Error adding post: ${error}`);
       setLoading(false);

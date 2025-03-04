@@ -2,7 +2,7 @@
 import { Blog } from "@/app/lib/definitions";
 import { usePathname } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
-import { deletePost, editPost, getBlog, getUserAdminStatus } from "@/app/lib/actions";
+import { deleteBlogPost, editBlogPost, getBlog, getUserAdminStatus } from "@/app/lib/actions";
 import Link from "next/link";
 import { HiArrowLeft } from "react-icons/hi2";
 import {
@@ -75,7 +75,7 @@ export default function BlogPost() {
   const id = Number(usePathname().split("/")[2]);
   const safeContent = DOMPurify.sanitize(blog.post);
 
-  console.log(blog);
+  console.log(blog.id);
   console.log(id);
 
   useEffect(() => {
@@ -115,7 +115,7 @@ export default function BlogPost() {
         alert("Please fill everything out Kierstyn!❤️");
         return;
       }
-      await editPost("blog", photo.toString(), title.toString(), post, blog.id);
+      await editBlogPost(photo.toString(), title.toString(), post, blog.id);
     } catch (error) {
       alert(`Error adding post: ${error}`);
       setLoading(false);
@@ -129,7 +129,7 @@ export default function BlogPost() {
 
   const handleDelete = async() => {
     try {
-      await deletePost("blog",blog.id)
+      await deleteBlogPost(blog.id)
       alert("Post deleted")
       window.history.back()
     } catch (error) {

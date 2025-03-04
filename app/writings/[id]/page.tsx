@@ -2,7 +2,7 @@
 import { Writing } from "@/app/lib/definitions";
 import { usePathname } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
-import { getWriting, getUserAdminStatus, editPost, deletePost } from "@/app/lib/actions";
+import { getWriting, getUserAdminStatus, deleteWritingPost, editWritingPost } from "@/app/lib/actions";
 import Link from "next/link";
 import { HiArrowLeft } from "react-icons/hi2";
 import {
@@ -118,7 +118,7 @@ export default function WritingsPost() {
           alert("Please fill everything out Kierstyn!❤️");
           return;
         }
-        await editPost("writings", photo.toString(), title.toString(), post, writing.id);
+        await editWritingPost(photo.toString(), title.toString(), post, writing.id);
       } catch (error) {
         alert(`Error adding post: ${error}`);
         setLoading(false);
@@ -132,7 +132,7 @@ export default function WritingsPost() {
   
     const handleDelete = async() => {
       try {
-        await deletePost("writing",writing.id)
+        await deleteWritingPost(writing.id)
         alert("Post deleted")
         window.history.back()
       } catch (error) {

@@ -92,25 +92,48 @@ export async function getWriting(id: string) {
   }
 }
 
-export async function addPost(table: string, photo: string, title: string, post: string) {
+export async function addBlogPost(photo: string, title: string, post: string) {
   try {
-    await sql`INSERT INTO ${table} (photo, title, post) VALUES (${photo}, ${title}, ${post})`
+    await sql`INSERT INTO blogs (photo, title, post) VALUES (${photo}, ${title}, ${post})`
   } catch (error) {
     console.log(error)
   }
 }
 
-export async function editPost(table: string, photo: string, title: string, post: string, id: string) {
+export async function editBlogPost(photo: string, title: string, post: string, id: string) {
   try {
-    await sql`UPDATE ${table} SET photo =${photo}, title = ${title}, post = ${post} WHERE id = ${id}`
+    await sql`UPDATE blogs SET photo =${photo}, title = ${title}, post = ${post} WHERE id = ${id}`
   } catch (error) {
     console.log(error)
   }
 }
 
-export async function deletePost(table: string, id: string) {
+export async function deleteBlogPost(id: string) {
   try {
-    await sql`DELETE FROM ${table} WHERE id = ${id}`
+    await sql`DELETE FROM blogs WHERE id = ${id}`
+  } catch (error) {
+    console.error(error);
+  }
+}
+export async function addWritingPost(photo: string, title: string, post: string) {
+  try {
+    await sql`INSERT INTO writings (photo, title, post) VALUES (${photo}, ${title}, ${post})`
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function editWritingPost(photo: string, title: string, post: string, id: string) {
+  try {
+    await sql`UPDATE writings SET photo =${photo}, title = ${title}, post = ${post} WHERE id = ${id}`
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+export async function deleteWritingPost(id: string) {
+  try {
+    await sql`DELETE FROM writings WHERE id = ${id}`
   } catch (error) {
     console.error(error);
   }
