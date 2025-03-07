@@ -14,6 +14,10 @@
   }
 }
 
+main {
+  min-height: 85vh;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
@@ -33,3 +37,8 @@ form > * {
   color: black;
 }
 
+.nav-button:hover {
+  background-color: #828698;
+  color: white;
+  cursor: pointer;
+}

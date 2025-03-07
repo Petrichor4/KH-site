@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import { Libre_Caslon_Display } from "next/font/google";
 import "./globals.css";
 import { Provider } from "@/components/ui/provider";
-import { getServerSession } from 'next-auth'
+import { getServerSession } from "next-auth";
 import ClientSessionProvider from "./components/ClientSessionProvider";
+import Footer from "./components/footer";
 
 const LCD = Libre_Caslon_Display({
   weight: "400",
-  subsets:["latin"]
-})
-
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -22,13 +22,15 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const session = await getServerSession();
-  console.log({session})
+  console.log({ session });
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`bg-[#828698] text-white ${LCD.className}`}
-      >
+      <body className={`bg-[#828698] text-white ${LCD.className}`}>
         <ClientSessionProvider session={session}>
-          <Provider>{children}</Provider>
+          <Provider>
+            {children}
+            <Footer />
+          </Provider>
         </ClientSessionProvider>
       </body>
     </html>

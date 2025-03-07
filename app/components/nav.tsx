@@ -29,9 +29,9 @@ export default function Nav() {
   // Prevent rendering until size is determined
   if (!size) return null;
   return (
-    <nav className="absolute top-4 right-4">
-      {size.width >= 768 ? (
-        <div className="">
+    <nav className="h-0 lg:w-full">
+      {size.width >= 1025 ? (
+        <div className="flex flex-row absolute top-[3vh] w-[91%] 2xl:w-[95%] justify-between text-2xl">
           <Link href={"/blog"}>
             <h2>Blog</h2>
           </Link>
@@ -49,7 +49,7 @@ export default function Nav() {
         <DrawerRoot size={"lg"}>
           <DrawerBackdrop />
           <DrawerTrigger>
-            <VscMenu size={30} />
+            <VscMenu className="nav-button absolute top-4 right-4" size={30} />
           </DrawerTrigger>
           <DrawerContent bg={"white"}>
             <DrawerCloseTrigger />
