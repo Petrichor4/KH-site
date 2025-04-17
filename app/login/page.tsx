@@ -106,7 +106,7 @@ export default function Login() {
               type="submit"
               loading={loading}
               loadingText="Signing In"
-              className="self-end active:opacity-75"
+              className="text-black self-end active:opacity-75"
             >
               Sign In
             </Button>

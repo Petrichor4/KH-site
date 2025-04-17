@@ -219,7 +219,7 @@ export default function WritingsPost() {
         </div>
         <div
           dangerouslySetInnerHTML={{ __html: safeContent }}
-          className="p-8 md:px-40 md:text-xl text-justify indent-5 md:indent-10"
+          className="p-3 md:px-40 md:text-xl text-justify indent-5 md:indent-10"
         ></div>
       </main>
     </>

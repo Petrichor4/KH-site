@@ -19,7 +19,7 @@ export async function getHeaderData(): Promise<HeaderData[]> {
 export async function getBlogs() {
   try {
     const result = await sql<Blog>`
-            SELECT * FROM blogs
+            SELECT * FROM blogs ORDER BY id DESC
         `;
     return result.rows;
   } catch (error) {
@@ -73,7 +73,7 @@ export async function getUserAdminStatus(username: string) {
 export async function getWritings() {
   try {
     const result = await sql<Writing>`
-      SELECT * FROM writings
+      SELECT * FROM writings ORDER BY id DESC
     `
     return result.rows
   } catch (error) {
