@@ -141,10 +141,20 @@ export async function deleteWritingPost(id: string) {
 
 export async function getBooks() {
   try {
-    const result = await sql<Book>`SELECT * FROM books`
+    const result = await sql<Book>`SELECT * FROM books ORDER BY id ASC`
     return result.rows;
   } catch (error) {
     console.error(error);
+    return []
+  }
+}
+
+export async function getBookById(id: string) {
+  try {
+    const result = await sql<Book>`SELECT * FROM books WHERE id = ${id}`
+    return result.rows;
+  } catch (error) {
+    console.error(error)
     return []
   }
 }
