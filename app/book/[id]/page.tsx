@@ -38,12 +38,14 @@ export default function BookPage() {
         </Link>
       </nav>
       <h1 className="text-center text-2xl md:text-5xl">{book.title}</h1>
-      <main className="flex justify-center flex-wrap">
-        <div className="flex w-10/12 mt-20 md:px-20">
-            <Image className="max-w-[50%] max-h-[50%] rounded-3xl" src={book.photo} alt={`title photo for ${book.title}`}></Image>
-            <Text className="text-sm md:text-xl pl-2 md:pl-4 ">{book.description}</Text>
+      <main className="flex items-center flex-col flex-wrap">
+        <div className="flex w-10/12 mt-20 justify-center">
+            <div className="image-container flex justify-center h-40 w-full md:h-80 md:w-64">
+                <Image className="rounded-xl h-auto" src={book.photo} alt={`title photo for ${book.title}`}></Image>
+            </div>
+            <Text className="text-sm md:text-xl pl-4 text-justify md:pl-12 max-w-[50%]">{book.description}</Text>
         </div>
-        <h2 className="text-2xl">Links to buy and read coming soon...</h2>
+        <h2 className="md:text-2xl mt-8">Links to buy and read coming soon...</h2>
       </main>
     </>
   );

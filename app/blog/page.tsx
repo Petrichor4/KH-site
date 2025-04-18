@@ -13,12 +13,13 @@ import {
 } from "@chakra-ui/react";
 import CustomCard from "../components/customCard";
 import { Blog } from "../lib/definitions";
-import { addBlogPost, getBlogs, getUserAdminStatus } from "../lib/actions";
+import { addBlogPost, getBlogs } from "../lib/actions";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { signOut, useSession } from "next-auth/react";
 import CustomModal from "../components/customModal";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
+import { useIsAdmin } from "../components/useIsAdmin";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -26,7 +27,7 @@ export default function BlogPage() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [visibile, setVisible] = useState(false);
   const { data: session } = useSession();
-  const [isAdmin, setIsAdmin] = useState(false);
+  const {isAdmin} = useIsAdmin();
   const [post, setPost] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -72,20 +73,6 @@ export default function BlogPage() {
     };
     fetchBlogs();
   }, []);
-
-  useEffect(() => {
-    if (!session?.user?.name) {
-      return;
-    }
-    const username = session?.user?.name;
-    const fetchAdminStatus = async () => {
-      const response = await getUserAdminStatus(username);
-      if (response && response.admin !== undefined) {
-        setIsAdmin(response.admin);
-      }
-    };
-    fetchAdminStatus();
-  }, [session?.user?.name]);
 
   const handlePost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

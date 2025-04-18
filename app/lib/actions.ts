@@ -16,29 +16,12 @@ export async function getHeaderData(): Promise<HeaderData[]> {
   }
 }
 
-export async function getBlogs() {
-  try {
-    const result = await sql<Blog>`
-            SELECT * FROM blogs ORDER BY id DESC
-        `;
-    return result.rows;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
+/*
+---------------
+User actions
+---------------
+*/
 
-export async function getBlog(id: number) {
-  try {
-    const result = await sql<Blog>`
-      SELECT * FROM blogs WHERE id = ${id}
-    `;
-    return result.rows;
-  } catch (error) {
-    console.error(error);
-    return [];
-  }
-}
 
 export async function addUser(username: string, password: string) {
   const saltRounds = 10;
@@ -70,27 +53,36 @@ export async function getUserAdminStatus(username: string) {
   }
 }
 
-export async function getWritings() {
+/*
+---------------
+Blog actions
+---------------
+*/
+
+export async function getBlogs() {
   try {
-    const result = await sql<Writing>`
-      SELECT * FROM writings ORDER BY id DESC
-    `
-    return result.rows
+    const result = await sql<Blog>`
+            SELECT * FROM blogs ORDER BY id DESC
+        `;
+    return result.rows;
   } catch (error) {
     console.error(error);
-    return []
+    return [];
   }
 }
 
-export async function getWriting(id: string) {
+export async function getBlog(id: number) {
   try {
-    const result = await sql<Writing>`Select * FROM writings WHERE id = ${id}`;
-    return result.rows
+    const result = await sql<Blog>`
+      SELECT * FROM blogs WHERE id = ${id}
+    `;
+    return result.rows;
   } catch (error) {
-    console.log(error);
-    return []
+    console.error(error);
+    return [];
   }
 }
+
 
 export async function addBlogPost(photo: string, title: string, post: string) {
   try {
@@ -115,6 +107,35 @@ export async function deleteBlogPost(id: string) {
     console.error(error);
   }
 }
+
+/*
+---------------
+Writings actions
+---------------
+*/
+
+export async function getWritings() {
+  try {
+    const result = await sql<Writing>`
+      SELECT * FROM writings ORDER BY id DESC
+    `
+    return result.rows
+  } catch (error) {
+    console.error(error);
+    return []
+  }
+}
+
+export async function getWriting(id: string) {
+  try {
+    const result = await sql<Writing>`Select * FROM writings WHERE id = ${id}`;
+    return result.rows
+  } catch (error) {
+    console.log(error);
+    return []
+  }
+}
+
 export async function addWritingPost(photo: string, title: string, content: string) {
   try {
     await sql`INSERT INTO writings (photo, title, content) VALUES (${photo}, ${title}, ${content})`
@@ -139,9 +160,15 @@ export async function deleteWritingPost(id: string) {
   }
 }
 
+/*
+---------------
+Book actions
+---------------
+*/
+
 export async function getBooks() {
   try {
-    const result = await sql<Book>`SELECT * FROM books ORDER BY id ASC`
+    const result = await sql<Book>`SELECT * FROM books ORDER BY 2 ASC`
     return result.rows;
   } catch (error) {
     console.error(error);
@@ -156,5 +183,29 @@ export async function getBookById(id: string) {
   } catch (error) {
     console.error(error)
     return []
+  }
+}
+
+export async function editBook(id: string, title: string, description: string, photo: string) {
+  try {
+    await sql<Book>`UPDATE books SET title = ${title}, description = ${description}, photo = ${photo} WHERE id = ${id}`
+  } catch  (error) {
+    console.error(error)
+  }
+}
+
+export async function addBook(title: string, description: string, photo: string) {
+  try {
+    await sql<Book>`INSERT INTO books (title, description, photo) VALUES (${title},${description},${photo})`
+ } catch (error) {
+  console.error(error)
+ }
+}
+
+export async function deleteBook(id: string) {
+  try {
+    await sql<Book>`DELETE FROM books WHERE id = ${id}`
+  } catch (error) {
+    console.error(error);
   }
 }

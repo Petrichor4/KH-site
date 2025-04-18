@@ -3,10 +3,23 @@ import { Monsieur_La_Doulaise } from "next/font/google";
 import Nav from "./components/nav";
 import { Image, SimpleGrid } from "@chakra-ui/react";
 import InfoCard from "./components/InfoCard";
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { HeaderData, Book } from "./lib/definitions";
-import { getBooks, getHeaderData } from "./lib/actions";
+import { getBooks, getHeaderData, addBook } from "./lib/actions";
 import BookCard from "./components/bookCard";
+import { useIsAdmin } from "./components/useIsAdmin";
+import { HiOutlinePlus } from "react-icons/hi";
+import CustomModal from "./components/customModal";
+import {
+  Button,
+  Fieldset,
+  Stack,
+  Field,
+  FieldLabel,
+  Input,
+  Textarea
+} from "@chakra-ui/react";
+
 
 const monsieurLaDoulaise = Monsieur_La_Doulaise({
   weight: "400",
@@ -16,13 +29,19 @@ const monsieurLaDoulaise = Monsieur_La_Doulaise({
 });
 
 export default function Home() {
+  const { isAdmin } = useIsAdmin();
   const [headerData, setHeaderData] = useState<HeaderData[]>([]);
+  const [visible, setVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
-  const [size, setSize] = useState<{ width: number; height: number } | null>(null);
+  const [size, setSize] = useState<{ width: number; height: number } | null>(
+    null
+  );
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const updateSize = () => setSize({ width: window.innerWidth, height: window.innerHeight });
+      const updateSize = () =>
+        setSize({ width: window.innerWidth, height: window.innerHeight });
       updateSize(); // Set initial size immediately
       window.addEventListener("resize", updateSize);
       return () => window.removeEventListener("resize", updateSize);
@@ -30,10 +49,9 @@ export default function Home() {
   }, []);
 
   // Prevent rendering until size is determined
-  
-  
-  console.log(headerData);
-  
+
+  // console.log(headerData);
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await getHeaderData();
@@ -43,7 +61,7 @@ export default function Home() {
     };
     fetchData();
   }, []);
-  
+
   useEffect(() => {
     const fetchBooks = async () => {
       const response = await getBooks();
@@ -51,25 +69,64 @@ export default function Home() {
     };
     fetchBooks();
   }, []);
-  
+
+  const handleAddBook = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const formData = new FormData(e.currentTarget);
+    const photo = formData.get("photo");
+    const title = formData.get("title");
+    const description = formData.get("description");
+    try {
+      if (!photo || !title) {
+        alert("Please fill everything out Kierstyn!❤️");
+        return;
+      }
+      await addBook(
+        title.toString(),
+        description?.toString() || "",
+        photo.toString()
+      );
+      const newBook = {
+        id: "",
+        title: title.toString(),
+        description: description?.toString() || "",
+        price: "",
+        links: [],
+        photo: photo.toString(),
+      };
+      books.push(newBook);
+    } catch (error) {
+      alert(`Error adding post: ${error}`);
+      setLoading(false);
+      console.error(error);
+    } finally {
+      setLoading(false);
+      setVisible(false);
+      alert("post edited sucessfully!");
+    }
+  };
+
   if (!size) return null;
   return (
     <>
       <header className="w-full flex flex-wrap justify-center">
         <div className="lg:flex lg:h-screen max-w-[2000px]">
           <div className="lg:w-1/2 lg:h-full lg:flex lg:flex-col justify-around">
-        {size.width < 1025 && <Nav />}
+            {size.width < 1025 && <Nav />}
             <h1
               className={`${monsieurLaDoulaise.className} text-5xl lg:text-7xl xl:text-8xl text-center p-12 pl-4`}
             >
               Kierstyn Hart
             </h1>
-            {size.width > 1025 && <InfoCard image={headerData[0]?.portrait}
-          desc={headerData[0]?.about_me}/>}
+            {size.width > 1025 && (
+              <InfoCard
+                image={headerData[0]?.portrait}
+                desc={headerData[0]?.about_me}
+              />
+            )}
           </div>
-          <div
-            className={`lg:w-1/2`}
-          >
+          <div className={`lg:w-1/2`}>
             <div className="lg:h-full max-md:max-h-[30vh] lg:p-6 overflow-hidden flex justify-center items-end lg:justify-end relative">
               {size.width > 1025 && <Nav />}
               <Image
@@ -80,19 +137,72 @@ export default function Home() {
             </div>
           </div>
         </div>
-        {size.width < 1025 && <InfoCard
-          image={headerData[0]?.portrait}
-          desc={headerData[0]?.about_me}
-        />}
+        {size.width < 1025 && (
+          <InfoCard
+            image={headerData[0]?.portrait}
+            desc={headerData[0]?.about_me}
+          />
+        )}
       </header>
       <main className="mt-4">
+        {visible && (
+          <CustomModal
+            title="New Book"
+            isOpen={true}
+            onClose={() => setVisible(false)}
+          >
+            <form onSubmit={handleAddBook}>
+              <Fieldset.Root>
+                <Stack>
+                  <Field.Root>
+                    <FieldLabel>Photo</FieldLabel>
+                    <Input name="photo" />
+                  </Field.Root>
+                  <Field.Root>
+                    <FieldLabel>Title</FieldLabel>
+                    <Input name="title" />
+                  </Field.Root>
+                  <Field.Root>
+                    <FieldLabel>Description</FieldLabel>
+                    <Textarea
+                      name="description"
+                      className="h-40"
+                    ></Textarea>
+                  </Field.Root>
+                </Stack>
+              </Fieldset.Root>
+              <div className="flex justify-between mt-4">
+                <Button
+                  type="submit"
+                  bg={"#828698"}
+                  size={"lg"}
+                  loading={loading}
+                >
+                  Confirm
+                </Button>
+              </div>
+            </form>
+          </CustomModal>
+        )}
         <h2 className="text-center text-3xl lg:text-5xl p-4">Books</h2>
-        <SimpleGrid columns={{ base: 2, lg: 3 }} p={4}>
+        <SimpleGrid columns={{ base: 2, lg: 3 }} p={4} className="gap-y-4">
           {books.map((book, index) => (
             <div className="flex justify-center my-2.5" key={index}>
               <BookCard book={book} />
             </div>
           ))}
+          {isAdmin && (
+            <div className="flex justify-center my-2.5">
+              <div className="flex bg-[#6E7281] p-1 md:p-3 rounded-xl active:bg-inherit duration-500">
+                <div
+                  className="flex justify-center items-center rounded-xl overflow-hidden relative hover:cursor-pointer min-h-[200px] w-[150px] md:h-[300px] md:w-[200px] lg:h-[400px] lg:w-[300px] duration-200 active:bg-[#828698] bg-inherit active:scale-90"
+                  onClick={() => setVisible(true)}
+                >
+                  <HiOutlinePlus size={60} />
+                </div>
+              </div>
+            </div>
+          )}
         </SimpleGrid>
       </main>
     </>

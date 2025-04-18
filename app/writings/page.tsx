@@ -16,9 +16,10 @@ import CustomCard from "../components/customCard";
 import CustomModal from "../components/customModal";
 import { Writing } from "../lib/definitions";
 import { useState, useEffect, FormEvent } from "react";
-import { getWritings, getUserAdminStatus, addWritingPost } from "../lib/actions";
+import { getWritings, addWritingPost } from "../lib/actions";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
+import { useIsAdmin } from "../components/useIsAdmin";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -58,23 +59,9 @@ export default function Writings() {
   const [writings, setWritings] = useState<Writing[]>([]);
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState('');
-  const { data: session } = useSession();
+  const {data: session} = useSession();
   const [visibile, setVisible] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-
-  useEffect(() => {
-    if (!session?.user?.name) {
-      return;
-    }
-    const username = session?.user?.name;
-    const fetchAdminStatus = async () => {
-      const response = await getUserAdminStatus(username);
-      if (response && response.admin !== undefined) {
-        setIsAdmin(response.admin);
-      }
-    };
-    fetchAdminStatus();
-  }, [session?.user?.name]);
+  const {isAdmin} = useIsAdmin();
 
   useEffect(() => {
     const fetchWritings = async () => {

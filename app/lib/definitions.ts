@@ -28,7 +28,7 @@ export interface Writing {
 export interface Book {
   id: string;
   title: string;
-  description: string;
+  description: string | null;
   photo: string;
   price: string;
   links: string[];

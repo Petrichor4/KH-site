@@ -29,14 +29,18 @@ const CustomModal: React.FC<ModalProps> = ({ isOpen, onClose, title, children })
         boxShadow="lg"
         backgroundColor={"white"}
         maxH={'75%'}
-        width={{ base: "90%", md: "70%" }}
+        width={{ base: "90%", md: "70%",lg: "40%" }}
         className="modal"
         color={'black'}
         overflow={"auto"}
       >
         <Flex justifyContent="space-between" alignItems="center" mb="4">
           <Text fontSize="xl" fontWeight="bold">{title}</Text>
-          <IconButton size="sm" bg={"#828698"} _hover={{bg: "#828698",opacity: "50%"}} rounded={"full"} onClick={onClose}><HiOutlineX /></IconButton>
+          <IconButton size="sm" bg={"#828698"} _hover={{bg: "#828698",opacity: "50%"}} rounded={"full"} onClick={(e) => {
+    e.stopPropagation();
+    e.preventDefault(); // this will also stop the <Link> from navigating
+    onClose();
+          }}><HiOutlineX /></IconButton>
         </Flex>
         {children}
       </Box>
