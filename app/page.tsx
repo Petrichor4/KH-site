@@ -5,10 +5,10 @@ import { Image, SimpleGrid } from "@chakra-ui/react";
 import InfoCard from "./components/InfoCard";
 import { useState, useEffect, FormEvent } from "react";
 import { HeaderData, Book } from "./lib/definitions";
-import { getBooks, getHeaderData, addBook } from "./lib/actions";
+import { getBooks, getHeaderData, addBook, editHeaderData } from "./lib/actions";
 import BookCard from "./components/bookCard";
 import { useIsAdmin } from "./components/useIsAdmin";
-import { HiOutlinePlus } from "react-icons/hi";
+import { HiOutlinePencil, HiOutlinePlus } from "react-icons/hi";
 import CustomModal from "./components/customModal";
 import {
   Button,
@@ -17,9 +17,8 @@ import {
   Field,
   FieldLabel,
   Input,
-  Textarea
+  Textarea,
 } from "@chakra-ui/react";
-
 
 const monsieurLaDoulaise = Monsieur_La_Doulaise({
   weight: "400",
@@ -31,6 +30,7 @@ const monsieurLaDoulaise = Monsieur_La_Doulaise({
 export default function Home() {
   const { isAdmin } = useIsAdmin();
   const [headerData, setHeaderData] = useState<HeaderData[]>([]);
+  const [headerEditVisibile, setHeaderEditVisible] = useState(false);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
@@ -50,7 +50,7 @@ export default function Home() {
 
   // Prevent rendering until size is determined
 
-  // console.log(headerData);
+  console.log(headerData);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -107,10 +107,81 @@ export default function Home() {
     }
   };
 
+  const handleEditHeaderData = async(e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setLoading(true);
+    const formData = new FormData(e.currentTarget);
+    const heroPhoto = formData.get("heroPhoto")?.toString();
+    const selfie = formData.get("selfie")?.toString();
+    const bio = formData.get("bio")?.toString();
+    try {
+      if (!heroPhoto || !selfie || !bio ) {
+        alert("Make sure there are no empty values")
+        return
+      }
+      await editHeaderData(
+        heroPhoto, selfie, bio
+      );
+    } catch (error) {
+      alert(`Error editing header data: ${error}`)
+      setLoading(false);
+      console.error(error);
+    } finally {
+      setLoading(false);
+      setHeaderEditVisible(false);
+      alert("Sucessfully edited header!")
+    }
+
+  }
+
   if (!size) return null;
   return (
     <>
       <header className="w-full flex flex-wrap justify-center">
+        {isAdmin && (
+          <Button
+            className="text-black text-2xl max-w-52 absolute top-8 left-8 active:scale-95"
+            size={"2xl"}
+            variant={"solid"}
+            onClick={() => setHeaderEditVisible(true)}
+          >
+            Edit
+            <HiOutlinePencil className="" />
+          </Button>
+        )}
+        {headerEditVisibile && (
+          <CustomModal title="Edit Header Data" isOpen={true} onClose={() => setHeaderEditVisible(false)} >
+            <form onSubmit={handleEditHeaderData}>
+              <Fieldset.Root>
+                <Stack>
+                  <Field.Root>
+                    <FieldLabel>Hero Photo</FieldLabel>
+                    <Input name="heroPhoto" />
+                  </Field.Root>
+                  <Field.Root>
+                    <FieldLabel>Portrait</FieldLabel>
+                    <Input name="selfie" />
+                  </Field.Root>
+                  <Field.Root>
+                    <FieldLabel>Bio</FieldLabel>
+                    <Textarea name="bio" className="h-40"></Textarea>
+                  </Field.Root>
+                </Stack>
+              </Fieldset.Root>
+              <div className="flex justify-between mt-4">
+                <Button
+                  type="submit"
+                  bg={"#828698"}
+                  size={"lg"}
+                  loading={loading}
+                >
+                  Confirm
+                </Button>
+              </div>
+            </form>
+          </CustomModal>
+        )}
         <div className="lg:flex lg:h-screen max-w-[2000px]">
           <div className="lg:w-1/2 lg:h-full lg:flex lg:flex-col justify-around">
             {size.width < 1025 && <Nav />}
@@ -130,7 +201,7 @@ export default function Home() {
             <div className="lg:h-full max-md:max-h-[30vh] lg:p-6 overflow-hidden flex justify-center items-end lg:justify-end relative">
               {size.width > 1025 && <Nav />}
               <Image
-                src="https://www.makerstations.io/content/images/size/w1200/format/webp/2022/03/olja-lobkis-studygram-04.jpeg"
+                src={headerData[0]?.hero_image}
                 className="lg:h-[95%]"
                 alt="Photo of desk with various writing accesories"
               />
@@ -164,10 +235,7 @@ export default function Home() {
                   </Field.Root>
                   <Field.Root>
                     <FieldLabel>Description</FieldLabel>
-                    <Textarea
-                      name="description"
-                      className="h-40"
-                    ></Textarea>
+                    <Textarea name="description" className="h-40"></Textarea>
                   </Field.Root>
                 </Stack>
               </Fieldset.Root>
@@ -193,7 +261,7 @@ export default function Home() {
           ))}
           {isAdmin && (
             <div className="flex justify-center my-2.5">
-              <div className="flex bg-[#6E7281] p-1 md:p-3 rounded-xl active:bg-inherit duration-500">
+              <div className="flex bg-[#6E7281] p-1 md:p-3 rounded-xl active:bg-inherit duration-500 hover:scale-[1.03]">
                 <div
                   className="flex justify-center items-center rounded-xl overflow-hidden relative hover:cursor-pointer min-h-[200px] w-[150px] md:h-[300px] md:w-[200px] lg:h-[400px] lg:w-[300px] duration-200 active:bg-[#828698] bg-inherit active:scale-90"
                   onClick={() => setVisible(true)}

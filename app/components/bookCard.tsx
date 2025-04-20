@@ -114,7 +114,7 @@ export default function BookCard({ book }: { book: Book }) {
       )}
       <Link
         href={`/book/${book.id}`}
-        className="flex flex-col bg-[#6E7281] p-1 md:p-3 rounded-xl active:bg-inherit duration-200"
+        className="flex flex-col bg-[#6E7281] p-1 md:p-3 rounded-xl active:bg-inherit duration-200 hover:scale-[1.03]"
       >
         <div className="flex justify-center items-center rounded-t-xl overflow-hidden relative hover:cursor-pointer h-[200px] w-[150px] md:h-[300px] md:w-[200px] lg:h-[400px] lg:w-[300px] duration-300">
           <Image

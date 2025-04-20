@@ -16,6 +16,14 @@ export async function getHeaderData(): Promise<HeaderData[]> {
   }
 }
 
+export async function editHeaderData(heroPhoto: string, selfie: string, bio: string) {
+  try {
+    await sql<HeaderData>`UPDATE kh SET about_me = ${bio}, portrait = ${selfie}, hero_image = ${heroPhoto}`
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 /*
 ---------------
 User actions
