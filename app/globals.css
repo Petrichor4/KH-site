@@ -14,8 +14,9 @@
   }
 }
 
+
 main {
-  min-height: 85vh;
+  min-height: 90vh;
 }
 
 body {
@@ -24,18 +25,23 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-Button {
+/* .chakra-button {
   color: white;
 }
 
+.chakra-button:hover {
+  background: #828698;
+  opacity: 50%;
+} */
+/*
 Button:hover {
   color: black;
   background-color: white;
-}
+} */
 
-form > * {
+/* form > * {
   color: black;
-}
+} */
 
 .nav-button:hover {
   background-color: #828698;

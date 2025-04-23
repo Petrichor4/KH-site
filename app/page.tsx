@@ -5,10 +5,10 @@ import { Image, SimpleGrid } from "@chakra-ui/react";
 import InfoCard from "./components/InfoCard";
 import { useState, useEffect, FormEvent } from "react";
 import { HeaderData, Book } from "./lib/definitions";
-import { getBooks, getHeaderData, addBook, editHeaderData } from "./lib/actions";
+import { getBooks, getHeaderData, addBook } from "./lib/actions";
 import BookCard from "./components/bookCard";
 import { useIsAdmin } from "./components/useIsAdmin";
-import { HiOutlinePencil, HiOutlinePlus } from "react-icons/hi";
+import { HiOutlinePlus } from "react-icons/hi";
 import CustomModal from "./components/customModal";
 import {
   Button,
@@ -30,7 +30,6 @@ const monsieurLaDoulaise = Monsieur_La_Doulaise({
 export default function Home() {
   const { isAdmin } = useIsAdmin();
   const [headerData, setHeaderData] = useState<HeaderData[]>([]);
-  const [headerEditVisibile, setHeaderEditVisible] = useState(false);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
@@ -107,81 +106,10 @@ export default function Home() {
     }
   };
 
-  const handleEditHeaderData = async(e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setLoading(true);
-    const formData = new FormData(e.currentTarget);
-    const heroPhoto = formData.get("heroPhoto")?.toString();
-    const selfie = formData.get("selfie")?.toString();
-    const bio = formData.get("bio")?.toString();
-    try {
-      if (!heroPhoto || !selfie || !bio ) {
-        alert("Make sure there are no empty values")
-        return
-      }
-      await editHeaderData(
-        heroPhoto, selfie, bio
-      );
-    } catch (error) {
-      alert(`Error editing header data: ${error}`)
-      setLoading(false);
-      console.error(error);
-    } finally {
-      setLoading(false);
-      setHeaderEditVisible(false);
-      alert("Sucessfully edited header!")
-    }
-
-  }
-
   if (!size) return null;
   return (
     <>
       <header className="w-full flex flex-wrap justify-center">
-        {isAdmin && (
-          <Button
-            className="text-black text-2xl max-w-52 absolute top-8 left-8 active:scale-95"
-            size={"2xl"}
-            variant={"solid"}
-            onClick={() => setHeaderEditVisible(true)}
-          >
-            Edit
-            <HiOutlinePencil className="" />
-          </Button>
-        )}
-        {headerEditVisibile && (
-          <CustomModal title="Edit Header Data" isOpen={true} onClose={() => setHeaderEditVisible(false)} >
-            <form onSubmit={handleEditHeaderData}>
-              <Fieldset.Root>
-                <Stack>
-                  <Field.Root>
-                    <FieldLabel>Hero Photo</FieldLabel>
-                    <Input name="heroPhoto" />
-                  </Field.Root>
-                  <Field.Root>
-                    <FieldLabel>Portrait</FieldLabel>
-                    <Input name="selfie" />
-                  </Field.Root>
-                  <Field.Root>
-                    <FieldLabel>Bio</FieldLabel>
-                    <Textarea name="bio" className="h-40"></Textarea>
-                  </Field.Root>
-                </Stack>
-              </Fieldset.Root>
-              <div className="flex justify-between mt-4">
-                <Button
-                  type="submit"
-                  bg={"#828698"}
-                  size={"lg"}
-                  loading={loading}
-                >
-                  Confirm
-                </Button>
-              </div>
-            </form>
-          </CustomModal>
-        )}
         <div className="lg:flex lg:h-screen max-w-[2000px]">
           <div className="lg:w-1/2 lg:h-full lg:flex lg:flex-col justify-around">
             {size.width < 1025 && <Nav />}
@@ -239,7 +167,7 @@ export default function Home() {
                   </Field.Root>
                 </Stack>
               </Fieldset.Root>
-              <div className="flex justify-between mt-4">
+              <div className="flex justify-end mt-4">
                 <Button
                   type="submit"
                   bg={"#828698"}

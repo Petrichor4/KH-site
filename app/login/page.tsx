@@ -88,7 +88,7 @@ export default function Login() {
       {logIn ? (
         <form
           onSubmit={handleLogin}
-          className="md:h-fit md:w-1/2 w-11/12 h-fit min-w-[355px] min-h-[400px] bg-white p-4 rounded-xl flex justify-around items-center flex-col relative shadow-xl"
+          className="md:h-fit md:w-1/2 w-11/12 h-fit min-w-[355px] min-h-[400px] bg-white p-4 rounded-xl flex justify-around items-center flex-col relative shadow-xl text-black"
         >
           <Stack gap={8} className="w-full md:w-2/3">
           <h2 className="text-3xl text-center">Sign in</h2>
@@ -106,7 +106,7 @@ export default function Login() {
               type="submit"
               loading={loading}
               loadingText="Signing In"
-              className="text-black self-end active:opacity-75"
+              className="text-black self-end active:opacity-75 text-xl"
             >
               Sign In
             </Button>
@@ -125,7 +125,7 @@ export default function Login() {
       ) : (
         <form
           onSubmit={handleRegister}
-          className="md:h-fit md:w-1/2 w-11/12 h-fit min-w-[355px] min-h-[400px] bg-white p-4 rounded-xl flex justify-around items-center flex-col relative shadow-xl"
+          className="md:h-fit md:w-1/2 w-11/12 h-fit min-w-[355px] min-h-[400px] bg-white p-4 rounded-xl flex justify-around items-center flex-col relative shadow-xl text-black"
         >
           <Stack gap={8} className="w-full md:w-2/3">
           <h2 className="text-3xl text-center">Sign Up</h2>
@@ -148,7 +148,7 @@ export default function Login() {
               type="submit"
               loading={loading}
               loadingText="Creating account"
-              className="self-end active:opacity-75 mb-4"
+              className="self-end active:opacity-75 mb-4 text-black text-xl"
             >
               Sign Up
             </Button>
