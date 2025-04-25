@@ -2,7 +2,12 @@
 import { Blog } from "@/app/lib/definitions";
 import { usePathname } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
-import { deleteBlogPost, editBlogPost, getBlog, getUserAdminStatus } from "@/app/lib/actions";
+import {
+  deleteBlogPost,
+  editBlogPost,
+  getBlog,
+  getUserAdminStatus,
+} from "@/app/lib/actions";
 import Link from "next/link";
 import { HiChevronLeft } from "react-icons/hi2";
 import {
@@ -26,6 +31,7 @@ import { useSession } from "next-auth/react";
 import CustomModal from "@/app/components/customModal";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
+import { motion, useTransform, useScroll } from "framer-motion";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -72,8 +78,11 @@ export default function BlogPost() {
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState("");
   const { data: session } = useSession();
+  const { scrollY } = useScroll();
   const id = Number(usePathname().split("/")[2]);
   const safeContent = DOMPurify.sanitize(blog.post);
+
+  const headerTitleOpacity = useTransform(scrollY, [0, 50], ["0", "1"]);
 
   console.log(blog.id);
   console.log(id);
@@ -116,40 +125,63 @@ export default function BlogPost() {
         return;
       }
       await editBlogPost(photo.toString(), title.toString(), post, blog.id);
+      alert("post edited sucessfully!");
+      setVisible(false);
     } catch (error) {
       alert(`Error adding post: ${error}`);
       setLoading(false);
       console.error(error);
     } finally {
       setLoading(false);
-      setVisible(false);
-      alert("post edited sucessfully!");
     }
   };
 
-  const handleDelete = async() => {
+  const handleDelete = async () => {
     try {
-      await deleteBlogPost(blog.id)
-      alert("Post deleted")
-      window.history.back()
+      await deleteBlogPost(blog.id);
+      alert("Post deleted");
+      window.history.back();
     } catch (error) {
-      console.error(error)
+      console.error(error);
       alert("Problem deleting post");
     }
-  }
+  };
 
   return (
     <>
-      <nav className="p-4 flex justify-between">
+      <motion.nav
+        className="p-4 sticky top-0 left-0 z-20 bg-inherit flex justify-between items-center"
+        // style={{ padding: headerPadding }}
+      >
         <Link href="/blog" className="active:border-none flex items-center">
-          <HiChevronLeft size={40} />
+          <motion.button
+            className="hover:cursor-pointer"
+            whileHover={{
+              x: 10,
+              transition: {
+                duration: 0.8,
+                repeat: Infinity,
+                repeatType: "mirror",
+                ease: "easeInOut",
+              },
+            }}
+            whileTap={{ scale: 0.9, x: 0 }}
+          >
+            <HiChevronLeft size={40} />
+          </motion.button>
+          <motion.h1
+            className="text-white text-3xl lg:text-6xl"
+            style={{ opacity: headerTitleOpacity }}
+          >
+            {blog.title}
+          </motion.h1>
         </Link>
         {isAdmin && (
           <Button size={"lg"} onClick={() => setVisible(true)}>
             Edit
           </Button>
         )}
-      </nav>
+      </motion.nav>
       <main>
         {visible && (
           <CustomModal
@@ -170,7 +202,7 @@ export default function BlogPost() {
                   </Field.Root>
                   <Field.Root>
                     <FieldLabel>Post</FieldLabel>
-                    <div className="w-full h-fit mb-[5.2%]">
+                    <div className="w-full h-fit">
                       <ReactQuill
                         theme="snow"
                         modules={modules}
@@ -178,25 +210,42 @@ export default function BlogPost() {
                         defaultValue={blog.post}
                         placeholder="Compose your epic Kierstyn Hart!"
                         onChange={(value) => setPost(value)}
-                        className="h-[300px]"
                       />
                     </div>
                   </Field.Root>
                 </Stack>
               </Fieldset.Root>
-              <div className="flex justify-between mt-4">
+              <div className="flex justify-between items-end h-[42px] mt-4">
                 <PopoverRoot closeOnInteractOutside={false}>
                   <PopoverTrigger>
-                    <Button type="button" colorPalette={"red"} size={"lg"}>Delete Post</Button>
+                    <Button type="button" colorPalette={"red"} size={"lg"}>
+                      Delete Post
+                    </Button>
                   </PopoverTrigger>
                   <PopoverContent className="text-black w-fit">
                     <PopoverBody>
-                      <PopoverTitle fontSize={"large"} m={2}>Are you sure?</PopoverTitle>
-                      <Button type="button" size={'lg'} w={"full"} colorPalette={"red"} onClick={handleDelete}>Delete</Button>
+                      <PopoverTitle fontSize={"large"} m={2}>
+                        Are you sure?
+                      </PopoverTitle>
+                      <Button
+                        type="button"
+                        size={"lg"}
+                        w={"full"}
+                        colorPalette={"red"}
+                        onClick={handleDelete}
+                      >
+                        Delete
+                      </Button>
                     </PopoverBody>
                   </PopoverContent>
                 </PopoverRoot>
-                <Button type="submit" bg={"#828698"} size={"lg"} loading={loading}>
+                <Button
+                  mt={"64px"}
+                  type="submit"
+                  bg={"#828698"}
+                  size={"lg"}
+                  loading={loading}
+                >
                   Post
                 </Button>
               </div>
@@ -206,7 +255,7 @@ export default function BlogPost() {
 
         <h1 className="p-4 md:px-20 text-2xl md:text-3xl">{blog.title}</h1>
 
-        <div className="flex justify-center mt-[2%]">
+        <div className="flex justify-center mt-[2%] p-3">
           <Image
             className="w-auto max-h-[500px] rounded-xl"
             src={blog.photo}
@@ -214,7 +263,7 @@ export default function BlogPost() {
           />
         </div>
         <div
-          className="p-8 md:px-40 md:text-xl text-justify indent-5 md:indent-10"
+          className="p-3 md:px-40 md:text-xl text-justify indent-5 md:indent-10"
           dangerouslySetInnerHTML={{ __html: safeContent }}
         ></div>
       </main>

@@ -92,14 +92,14 @@ export default function BlogPage() {
         return;
       }
       await addBlogPost(photo.toString(), title.toString(), post);
+      alert("post added sucessfully!");
+      setVisible(false);
     } catch (error) {
       alert(`Error adding post: ${error}`);
       setLoading(false);
       console.error(error);
     } finally {
       setLoading(false);
-      setVisible(false);
-      alert("post added sucessfully!");
     }
   };
 

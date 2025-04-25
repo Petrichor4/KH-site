@@ -59,14 +59,14 @@ export default function Nav() {
         return;
       }
       await editHeaderData(heroPhoto, selfie, bio);
+      alert("Sucessfully edited header!");
+      setVisible(false);
     } catch (error) {
       alert(`Error editing header data: ${error}`);
       setLoading(false);
       console.error(error);
     } finally {
       setLoading(false);
-      setVisible(false);
-      alert("Sucessfully edited header!");
     }
   };
 
@@ -76,21 +76,21 @@ export default function Nav() {
     <nav className="h-0 lg:w-full">
       {size.width >= 1025 ? (
         <div className="flex flex-row absolute top-[3vh] w-[91%] 2xl:w-[95%] justify-between text-2xl">
-          <Link href={"/blog"}>
+          <Link className="hover:underline" href={"/blog"}>
             <h2>Blog</h2>
           </Link>
-          <Link href={"/writings"}>
+          <Link className="hover:underline" href={"/writings"}>
             <h2>Writings</h2>
           </Link>
-          <Link href={"/events"}>
+          <Link className="hover:underline" href={"/events"}>
             <h2>Events</h2>
           </Link>
-          <Link href={"/contact"}>
+          <Link className="hover:underline" href={"/contact"}>
             <h2>Contact</h2>
           </Link>
           {isAdmin && (
             <button
-              className="hover:bg-transparent hover:text-white hover:cursor-pointer"
+              className="hover:underline hover:bg-transparent hover:text-white hover:cursor-pointer"
               onClick={() => setVisible((prev) => !prev)}
             >
               Edit
@@ -123,6 +123,7 @@ export default function Nav() {
                   <Button
                     type="submit"
                     bg={"#828698"}
+                    _hover={{opacity: "50%"}}
                     size={"lg"}
                     loading={loading}
                   >
@@ -207,6 +208,7 @@ export default function Nav() {
                         <Button
                           type="submit"
                           bg={"#828698"}
+                          _hover={{opacity: "50%"}}
                           size={"lg"}
                           loading={loading}
                         >

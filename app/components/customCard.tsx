@@ -3,7 +3,13 @@ import { Blog, Writing } from "../lib/definitions";
 import { useState } from "react";
 import Link from "next/link";
 
-export default function CustomCard({ type, post }: { post: Blog | Writing, type: string }) {
+export default function CustomCard({
+  type,
+  post,
+}: {
+  post: Blog | Writing;
+  type: string;
+}) {
   const [visilbility, setVisibility] = useState(false);
 
   return (
@@ -18,19 +24,17 @@ export default function CustomCard({ type, post }: { post: Blog | Writing, type:
           src={post.photo}
           alt={`Title photo for blog post`}
         ></Image>
-        <div
-          className={`${
-            visilbility ? "" : "hidden"
-          } rounded-xl z-10 bg-black opacity-70 absolute w-full h-full inset-0 flex`}
-        >
-          <Link className="p-1 w-fit h-fit" href={`/${type}/${post.id}`}>
-            <h2
-              className="text-white hover:underline p-1 h-fit w-fit cursor-pointer"
-            >
+        <Link className="p-1 w-fit h-fit" href={`/${type}/${post.id}`}>
+          <div
+            className={`${
+              visilbility ? "" : "hidden"
+            } rounded-xl z-10 bg-black opacity-70 absolute w-full h-full inset-0 flex`}
+          >
+            <h2 className="text-white hover:underline p-1 pl-2 h-fit w-fit cursor-pointer">
               {post.title}
             </h2>
-          </Link>
-        </div>
+          </div>
+        </Link>
       </div>
     </>
   );

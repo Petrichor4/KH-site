@@ -26,6 +26,7 @@ import CustomModal from "@/app/components/customModal";
 import DOMPurify from "dompurify";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
+import { motion, useTransform, useScroll } from "framer-motion";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -73,9 +74,13 @@ export default function WritingsPost() {
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const { scrollY } = useScroll();
   const [post, setPost] = useState('');
   const {data: session} = useSession();
   const safeContent = DOMPurify.sanitize(writing.content);
+
+  const headerTitleOpacity = useTransform(scrollY, [0, 50], ["0", "1"]);
+
 
   console.log(writing);
   console.log(id);
@@ -119,14 +124,14 @@ export default function WritingsPost() {
           return;
         }
         await editWritingPost(photo.toString(), title.toString(), post, writing.id);
+        alert("post edited sucessfully!");
+        setVisible(false);
       } catch (error) {
         alert(`Error adding post: ${error}`);
         setLoading(false);
         console.error(error);
       } finally {
         setLoading(false);
-        setVisible(false);
-        alert("post edited sucessfully!");
       }
     };
   
@@ -144,17 +149,39 @@ export default function WritingsPost() {
 
   return (
     <>
-      <nav className="p-4 flex justify-between">
+      <motion.nav
+        className="p-4 sticky top-0 left-0 z-20 bg-inherit flex justify-between items-center"
+        // style={{ padding: headerPadding }}
+      >
         <Link href="/writings" className="active:border-none flex items-center">
-          <HiChevronLeft size={40} />
+          <motion.button
+            className="hover:cursor-pointer"
+            whileHover={{
+              x: 10,
+              transition: {
+                duration: 0.8,
+                repeat: Infinity,
+                repeatType: "mirror",
+                ease: "easeInOut",
+              },
+            }}
+            whileTap={{ scale: 0.9, x: 0 }}
+          >
+            <HiChevronLeft size={40} />
+          </motion.button>
+          <motion.h1
+            className="text-white text-3xl lg:text-6xl"
+            style={{ opacity: headerTitleOpacity }}
+          >
+            {writing.title}
+          </motion.h1>
         </Link>
         {isAdmin && (
-          <Button fontSize={"2xl"} variant={"ghost"} size={"lg"} onClick={() => setVisible(true)}>
+          <Button size={"lg"} onClick={() => setVisible(true)}>
             Edit
           </Button>
         )}
-
-      </nav>
+      </motion.nav>
       <main>
       {visible && (
           <CustomModal
@@ -175,7 +202,7 @@ export default function WritingsPost() {
                   </Field.Root>
                   <Field.Root>
                     <FieldLabel>Post</FieldLabel>
-                    <div className="w-full h-fit mb-[5.2%]">
+                    <div className="w-full h-fit">
                       <ReactQuill
                         theme="snow"
                         modules={modules}
@@ -183,7 +210,6 @@ export default function WritingsPost() {
                         defaultValue={writing.content}
                         placeholder="Compose your epic Kierstyn Hart!"
                         onChange={(value) => setPost(value)}
-                        className="h-[300px]"
                       />
                     </div>
                   </Field.Root>
@@ -210,7 +236,7 @@ export default function WritingsPost() {
         )}
 
         <h1 className="p-4 md:px-20 text-2xl md:text-3xl">{writing.title}</h1>
-        <div className="flex justify-center mt-[2%]">
+        <div className="flex justify-center mt-[2%] p-3">
           <Image
             className="w-auto max-h-[500px] rounded-xl"
             src={writing.photo}
