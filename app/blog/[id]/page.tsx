@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { deleteBlogPost, editBlogPost, getBlog, getUserAdminStatus } from "@/app/lib/actions";
 import Link from "next/link";
-import { HiArrowLeft } from "react-icons/hi2";
+import { HiChevronLeft } from "react-icons/hi2";
 import {
   Button,
   Fieldset,
@@ -142,7 +142,7 @@ export default function BlogPost() {
     <>
       <nav className="p-4 flex justify-between">
         <Link href="/blog" className="active:border-none flex items-center">
-          <HiArrowLeft size={40} />
+          <HiChevronLeft size={40} />
         </Link>
         {isAdmin && (
           <Button size={"lg"} onClick={() => setVisible(true)}>

@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
 import { getWriting, getUserAdminStatus, deleteWritingPost, editWritingPost } from "@/app/lib/actions";
 import Link from "next/link";
-import { HiArrowLeft } from "react-icons/hi2";
+import { HiChevronLeft } from "react-icons/hi2";
 import {
   Button,
   Fieldset,
@@ -146,7 +146,7 @@ export default function WritingsPost() {
     <>
       <nav className="p-4 flex justify-between">
         <Link href="/writings" className="active:border-none flex items-center">
-          <HiArrowLeft size={40} />
+          <HiChevronLeft size={40} />
         </Link>
         {isAdmin && (
           <Button fontSize={"2xl"} variant={"ghost"} size={"lg"} onClick={() => setVisible(true)}>

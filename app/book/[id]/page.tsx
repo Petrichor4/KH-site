@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Book } from "@/app/lib/definitions";
 import { getBookById } from "@/app/lib/actions";
-import { HiArrowLeft } from "react-icons/hi2";
+import { HiChevronLeft } from "react-icons/hi2";
 import Link from 'next/link'
 import { Image, Text } from "@chakra-ui/react";
 
@@ -34,7 +34,7 @@ export default function BookPage() {
     <>
       <nav className="nav flex p-4 items-center">
         <Link href={'/'} >
-            <HiArrowLeft size={40} />
+            <HiChevronLeft size={40} />
         </Link>
       </nav>
       <h1 className="text-center text-2xl md:text-5xl">{book.title}</h1>

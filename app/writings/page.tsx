@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { HiArrowLeft, HiMiniPencilSquare } from "react-icons/hi2";
+import { HiChevronLeft, HiMiniPencilSquare } from "react-icons/hi2";
 import { signOut, useSession } from "next-auth/react";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import {
@@ -20,11 +20,12 @@ import { getWritings, addWritingPost } from "../lib/actions";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 import { useIsAdmin } from "../components/useIsAdmin";
+import { motion, useScroll, useTransform } from "framer-motion"
+
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 export default function Writings() {
-
   const modules = {
     toolbar: [
       [{ header: [1, 2, false] }],
@@ -58,10 +59,15 @@ export default function Writings() {
 
   const [writings, setWritings] = useState<Writing[]>([]);
   const [loading, setLoading] = useState(false);
-  const [post, setPost] = useState('');
-  const {data: session} = useSession();
+  const [post, setPost] = useState("");
+  const { data: session } = useSession();
   const [visibile, setVisible] = useState(false);
-  const {isAdmin} = useIsAdmin();
+  const { isAdmin } = useIsAdmin();
+  const {scrollY} = useScroll();
+
+  //animation variables for header animation
+  const headerTitleOpacity = useTransform(scrollY, [0,50], ["0","1"])
+  const headerPadding = useTransform(scrollY, [0,50], ["16px","4px"])
 
   useEffect(() => {
     const fetchWritings = async () => {
@@ -71,53 +77,69 @@ export default function Writings() {
     fetchWritings();
   }, []);
 
-    const handlePost = async (e: FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-      setLoading(true);
-      const formData = new FormData(e.currentTarget);
-      const photo = formData.get("photo");
-      const title = formData.get("title");
-      try {
-        if (!photo || !title) {
-          alert("Please fill everything out Kierstyn!❤️");
-          return;
-        }
-        await addWritingPost(photo.toString(), title.toString(), post);
-      } catch (error) {
-        alert(`Error adding post: ${error}`);
-        setLoading(false);
-        console.error(error);
-      } finally {
-        setLoading(false);
-        setVisible(false);
-        alert("post added sucessfully!");
+  const handlePost = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    const formData = new FormData(e.currentTarget);
+    const photo = formData.get("photo");
+    const title = formData.get("title");
+    try {
+      if (!photo || !title) {
+        alert("Please fill everything out Kierstyn!❤️");
+        return;
       }
-    };
-  
+      await addWritingPost(photo.toString(), title.toString(), post);
+    } catch (error) {
+      alert(`Error adding post: ${error}`);
+      setLoading(false);
+      console.error(error);
+    } finally {
+      setLoading(false);
+      setVisible(false);
+      alert("post added sucessfully!");
+    }
+  };
 
   return (
     <>
-      <nav className="p-8 flex justify-center">
-        <Link href="/" className="active:border-none absolute top-4 left-4">
-          <HiArrowLeft size={40} />
+      <motion.nav
+        className="p-4 pb-1 sticky top-0 left-0 z-10 bg-inherit flex justify-between items-center"
+        style={{ padding: headerPadding }}
+      >
+        <Link href="/" className="active:border-none flex items-center">
+          <motion.button className="hover:cursor-pointer"
+            whileHover={{
+              x: 10,
+              transition: { duration: .8, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" },
+            }}
+            whileTap={{ scale: 0.9, x: 0 }}
+          >
+            <HiChevronLeft size={40} />
+          </motion.button>
+          <motion.h1
+            className="text-white text-3xl lg:text-6xl"
+            style={{ opacity: headerTitleOpacity }}
+          >
+            Writings
+          </motion.h1>
         </Link>
-        <h1 className="text-5xl">Writings</h1>
-        <Link className="absolute top-4 right-4" href={"/login"}>
+        <Link href={"/login"}>
           {session ? (
             <Button
-              className="text-xl"
+              className="text-2xl lg:text-3xl lg:p-6"
               variant={"ghost"}
               onClick={() => signOut()}
             >
               Sign Out
             </Button>
           ) : (
-            <Button className="text-xl" variant={"ghost"}>
-              Sign In/ Sign Up
+            <Button className="text-2xl lg:text-3xl lg:p-6" variant={"ghost"}>
+              Sign In
             </Button>
           )}
         </Link>
-      </nav>
+      </motion.nav>
+      <h1 className="p-4 pt-0 scroll-p-3.5 text-3xl lg:text-6xl">Writings</h1>
       <main>
         {isAdmin && (
           <IconButton

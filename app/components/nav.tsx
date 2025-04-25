@@ -25,6 +25,7 @@ import {
 import { useIsAdmin } from "./useIsAdmin";
 import { editHeaderData } from "../lib/actions";
 import CustomModal from "./customModal";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Nav() {
   const [visible, setVisible] = useState(false);
@@ -97,7 +98,7 @@ export default function Nav() {
           )}
           {visible && (
             <CustomModal
-              title="New Book"
+              title="Edit Header"
               isOpen={true}
               onClose={() => setVisible((prev) => !prev)}
             >
@@ -105,16 +106,16 @@ export default function Nav() {
                 <Fieldset.Root>
                   <Stack>
                     <Field.Root>
-                      <FieldLabel>Photo</FieldLabel>
-                      <Input name="photo" />
+                      <FieldLabel>Hero Photo</FieldLabel>
+                      <Input name="heroPhoto" />
                     </Field.Root>
                     <Field.Root>
-                      <FieldLabel>Title</FieldLabel>
-                      <Input name="title" />
+                      <FieldLabel>Portrait</FieldLabel>
+                      <Input name="selfie" />
                     </Field.Root>
                     <Field.Root>
-                      <FieldLabel>Description</FieldLabel>
-                      <Textarea name="description" className="h-40"></Textarea>
+                      <FieldLabel>Bio</FieldLabel>
+                      <Textarea name="bio" className="h-40"></Textarea>
                     </Field.Root>
                   </Stack>
                 </Fieldset.Root>
@@ -139,7 +140,7 @@ export default function Nav() {
             <VscMenu className="nav-button absolute top-4 right-4" size={30} />
           </DrawerTrigger>
           <DrawerContent bg={"white"}>
-            <DrawerCloseTrigger onClick={() => setVisible(false)}/>
+            <DrawerCloseTrigger onClick={() => setVisible(false)} />
             <DrawerHeader>
               <DrawerTitle />
             </DrawerHeader>
@@ -176,38 +177,46 @@ export default function Nav() {
                   </Button>
                 )}
               </div>
-              <div className="editContainer w-full py-8">
+              <AnimatePresence initial={false}>
                 {visible && (
-                  <form onSubmit={handleEditHeaderData}>
-                    <Fieldset.Root>
-                      <Stack>
-                        <Field.Root>
-                          <FieldLabel>Hero Photo</FieldLabel>
-                          <Input name="heroPhoto" />
-                        </Field.Root>
-                        <Field.Root>
-                          <FieldLabel>Portrait</FieldLabel>
-                          <Input name="selfie" />
-                        </Field.Root>
-                        <Field.Root>
-                          <FieldLabel>Bio</FieldLabel>
-                          <Textarea name="bio" className="h-40"></Textarea>
-                        </Field.Root>
-                      </Stack>
-                    </Fieldset.Root>
-                    <div className="flex justify-end mt-4">
-                      <Button
-                        type="submit"
-                        bg={"#828698"}
-                        size={"lg"}
-                        loading={loading}
-                      >
-                        Confirm
-                      </Button>
-                    </div>
-                  </form>
+                  <motion.div
+                    className="editContainer w-full py-8"
+                    transition={{duration: .8,ease: [0, 0.71, 0.2, 1.01]}}
+                    initial={{ y: -20, opacity: 0, height: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -20, opacity: 0, height: 0 }}
+                  >
+                    <form onSubmit={handleEditHeaderData}>
+                      <Fieldset.Root>
+                        <Stack>
+                          <Field.Root>
+                            <FieldLabel>Hero Photo</FieldLabel>
+                            <Input name="heroPhoto" />
+                          </Field.Root>
+                          <Field.Root>
+                            <FieldLabel>Portrait</FieldLabel>
+                            <Input name="selfie" />
+                          </Field.Root>
+                          <Field.Root>
+                            <FieldLabel>Bio</FieldLabel>
+                            <Textarea name="bio" className="h-40"></Textarea>
+                          </Field.Root>
+                        </Stack>
+                      </Fieldset.Root>
+                      <div className="flex justify-end mt-4">
+                        <Button
+                          type="submit"
+                          bg={"#828698"}
+                          size={"lg"}
+                          loading={loading}
+                        >
+                          Confirm
+                        </Button>
+                      </div>
+                    </form>
+                  </motion.div>
                 )}
-              </div>
+              </AnimatePresence>
             </DrawerBody>
             <DrawerFooter />
           </DrawerContent>
