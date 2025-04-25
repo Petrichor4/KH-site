@@ -24,7 +24,7 @@ export default function CustomCard({
           src={post.photo}
           alt={`Title photo for blog post`}
         ></Image>
-        <Link className="p-1 w-fit h-fit" href={`/${type}/${post.id}`}>
+        <Link className="p-1 w-fit h-fit" href={`/${type}/${post.id}`} onClick={(e) => e.stopPropagation()}>
           <div
             className={`${
               visilbility ? "" : "hidden"

@@ -208,7 +208,7 @@ export default function Writings() {
             2000: 6,
           }}
         >
-          <Masonry className="p-[1%] pt-0">
+          <Masonry className="p-[10px] pt-0">
             {writings.map((writing, index) => (
               <CustomCard key={index} post={writing} type="writings" />
             ))}

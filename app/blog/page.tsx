@@ -217,7 +217,7 @@ export default function BlogPage() {
             2000: 6,
           }}
         >
-          <Masonry className="p-[1.5%] pt-0">
+          <Masonry className="p-[10px] pt-0">
             {blogs.map((blog, index) => (
               <CustomCard key={index} post={blog} type="blog" />
             ))}
