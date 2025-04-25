@@ -24,17 +24,17 @@ export default function CustomCard({
           src={post.photo}
           alt={`Title photo for blog post`}
         ></Image>
-        <Link className="p-1 w-fit h-fit" href={`/${type}/${post.id}`} onClick={(e) => e.stopPropagation()}>
+        {visilbility && (
+          <Link className="p-1 w-fit h-fit" href={`/${type}/${post.id}`}>
           <div
-            className={`${
-              visilbility ? "" : "hidden"
-            } rounded-xl z-10 bg-black opacity-70 absolute w-full h-full inset-0 flex`}
+            className={`rounded-xl z-10 bg-black opacity-70 absolute w-full h-full inset-0 flex`}
           >
-            <h2 className="text-white hover:underline p-1 pl-2 h-fit w-fit cursor-pointer">
-              {post.title}
-            </h2>
+              <h2 className="text-white hover:underline p-1 h-fit w-fit cursor-pointer">
+                {post.title}
+              </h2>
           </div>
-        </Link>
+            </Link>
+        )}
       </div>
     </>
   );

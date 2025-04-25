@@ -38,12 +38,8 @@ textarea {
   border: none;
 }
 
-CustomModal > Button {
+form > button {
   padding: 16px;
-}
-
-CustomModal > Button:hover {
-  opacity: 50%;
 }
 
 .navButton {
