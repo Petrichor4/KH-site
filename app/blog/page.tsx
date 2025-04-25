@@ -132,21 +132,21 @@ export default function BlogPage() {
             Blog
           </motion.h1>
         </Link>
-        <Link href={"/login"}>
-          {session ? (
-            <Button
-              className="text-2xl lg:text-3xl lg:p-6"
-              variant={"ghost"}
-              onClick={() => signOut()}
-            >
-              Sign Out
-            </Button>
-          ) : (
+        {session ? (
+          <Button
+            className="text-2xl lg:text-3xl lg:p-6"
+            variant={"ghost"}
+            onClick={() => signOut()}
+          >
+            Sign Out
+          </Button>
+        ) : (
+          <Link href={"/login"}>
             <Button className="text-2xl lg:text-3xl lg:p-6" variant={"ghost"}>
               Sign In
             </Button>
-          )}
-        </Link>
+          </Link>
+        )}
       </motion.nav>
       <h1 className="p-4 pt-0 scroll-p-3.5 text-3xl lg:text-6xl">Blog</h1>
       <main>

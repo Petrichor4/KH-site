@@ -123,7 +123,6 @@ export default function Writings() {
             Writings
           </motion.h1>
         </Link>
-        <Link href={"/login"}>
           {session ? (
             <Button
               className="text-2xl lg:text-3xl lg:p-6"
@@ -133,11 +132,12 @@ export default function Writings() {
               Sign Out
             </Button>
           ) : (
+            <Link href={"/login"}>
             <Button className="text-2xl lg:text-3xl lg:p-6" variant={"ghost"}>
               Sign In
             </Button>
-          )}
         </Link>
+          )}
       </motion.nav>
       <h1 className="p-4 pt-0 scroll-p-3.5 text-3xl lg:text-6xl">Writings</h1>
       <main>
