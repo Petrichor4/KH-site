@@ -171,7 +171,7 @@ export default function Nav() {
                   <Button
                     onClick={() => setVisible((prev) => !prev)}
                     variant={"ghost"}
-                    className="text-black text-5xl active:underline transition-transform duration-300 self-start p-0"
+                    className="navButton text-black text-5xl active:underline transition-transform duration-300 self-start p-0"
                   >
                     Edit
                   </Button>

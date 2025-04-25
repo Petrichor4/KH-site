@@ -28,10 +28,9 @@ export default function ContactPage() {
           >
             <HiChevronLeft size={40} />
           </motion.button>
-
         </Link>
         <div className="w-5/6 md:w-1/2">
-          <Stack className="p-10">
+          <Stack className="p-10 contact-form">
             <h2>Name</h2>
             <Input
               variant={"subtle"}

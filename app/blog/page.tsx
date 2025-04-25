@@ -35,7 +35,7 @@ export default function BlogPage() {
 
   // animations for the header
   const headerTitleOpacity = useTransform(scrollY, [0, 50], ["0", "1"]);
-  const headerPadding = useTransform(scrollY, [0, 50], ["16px", "4px"]);
+  // const headerPadding = useTransform(scrollY, [0, 50], ["16px", "4px"]);
 
   // console.log(isAdmin);
 
@@ -106,14 +106,20 @@ export default function BlogPage() {
   return (
     <>
       <motion.nav
-        className="p-4 pb-1 sticky top-0 left-0 z-10 bg-inherit flex justify-between items-center"
-        style={{ padding: headerPadding }}
+        className="p-4 sticky top-0 left-0 z-20 bg-inherit flex justify-between items-center"
+        // style={{ padding: headerPadding }}
       >
         <Link href="/" className="active:border-none flex items-center">
-          <motion.button className="hover:cursor-pointer"
+          <motion.button
+            className="hover:cursor-pointer"
             whileHover={{
               x: 10,
-              transition: { duration: .8, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" },
+              transition: {
+                duration: 0.8,
+                repeat: Infinity,
+                repeatType: "mirror",
+                ease: "easeInOut",
+              },
             }}
             whileTap={{ scale: 0.9, x: 0 }}
           >
@@ -190,6 +196,7 @@ export default function BlogPage() {
               </Fieldset.Root>
               <div className="flex justify-end mt-4">
                 <Button
+                  className="hover:opacity-50"
                   type="submit"
                   bg={"#828698"}
                   size={"lg"}
