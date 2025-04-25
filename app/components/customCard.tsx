@@ -29,7 +29,7 @@ export default function CustomCard({
           <div
             className={`rounded-xl z-10 bg-black opacity-70 absolute w-full h-full inset-0 flex`}
           >
-              <h2 className="text-white hover:underline p-1 h-fit w-fit cursor-pointer">
+              <h2 className="text-white hover:underline p-1 pl-2 h-fit w-fit cursor-pointer">
                 {post.title}
               </h2>
           </div>
