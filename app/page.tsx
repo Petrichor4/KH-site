@@ -26,13 +26,14 @@ const monsieurLaDoulaise = Monsieur_La_Doulaise({
   preload: true,
   subsets: ["latin"],
   style: "normal",
+  display: "swap"
 });
 
 export default function Home() {
   const { isAdmin } = useIsAdmin();
   const [headerData, setHeaderData] = useState<HeaderData[]>([{
-    hero_image: "https://i.stack.imgur.com/mwFzF.png",
-    portrait: "https://i.stack.imgur.com/mwFzF.png",
+    hero_image: "https://www.makerstations.io/content/images/2022/03/olja-lobkis-studygram-04.jpeg",
+    portrait: "https://i.pinimg.com/1200x/2e/31/d9/2e31d9f77bcf7bbea64257292a9fad55.jpg",
     about_me: ""
   }]);
   const [visible, setVisible] = useState(false);
@@ -111,19 +112,18 @@ export default function Home() {
     }
   };
 
-  if (!size) return null;
   return (
     <>
       <motion.header className="w-full flex flex-wrap justify-center">
         <div className="lg:flex lg:h-screen max-w-[2000px]">
           <div className="lg:w-1/2 lg:h-full lg:flex lg:flex-col justify-around">
-            {size.width < 1025 && <Nav />}
+            {size && size.width < 1025 && <Nav />}
             <h1
               className={`${monsieurLaDoulaise.className} text-5xl lg:text-7xl xl:text-8xl text-center p-12 pl-4`}
             >
               Kierstyn Hart
             </h1>
-            {size.width > 1025 && (
+            {size && size.width > 1025 && (
               <InfoCard
                 image={headerData[0]?.portrait}
                 desc={headerData[0]?.about_me}
@@ -132,7 +132,7 @@ export default function Home() {
           </div>
           <div className={`lg:w-1/2`}>
             <div className="lg:h-full max-md:max-h-[30vh] lg:p-6 overflow-hidden flex justify-center items-end lg:justify-end relative">
-              {size.width > 1025 && <Nav />}
+              {size && size.width > 1025 && <Nav />}
               <Image
                 src={headerData[0]?.hero_image}
                 className="lg:h-[95%] min-w-full"
@@ -141,7 +141,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-        {size.width < 1025 && (
+        {size && size.width < 1025 && (
           <InfoCard
             image={headerData[0]?.portrait}
             desc={headerData[0]?.about_me}

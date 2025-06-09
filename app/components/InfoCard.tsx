@@ -12,7 +12,7 @@ export default function InfoCard({
     <div className="flex p-2 justify-around h-1/2 overflow-hidden">
       <div className="w-1/3 overflow-hidden flex justify-center items-center lg:h-[55vh]">
         <Image
-          className="w-full h-full sm:max-lg:h-5/6"
+          className="min-w-full min-h-full sm:max-lg:h-5/6"
           src={image}
           alt="Picture of Kierstyn Hart"
         ></Image>
