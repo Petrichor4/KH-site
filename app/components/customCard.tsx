@@ -19,9 +19,10 @@ export default function CustomCard({
         whileHover={{
           scale: 0.99,
           transition: {
-            duration: 0.8,
+            duration: 0.3,
           },
         }}
+        onHoverEnd={() => setVisibility(false)}
         className="relative flex h-full w-full"
         onMouseEnter={() => setVisibility(true)}
         onTap={() => setVisibility(true)}
@@ -41,7 +42,7 @@ export default function CustomCard({
           >
             <motion.div
               initial={{opacity:0}}
-              whileInView={{opacity: 0.7, transition:{duration:.5}}}
+              animate={{opacity: 0.7, transition:{duration:.3}}}
               className={`rounded-xl z-10 bg-black opacity-70 absolute w-full h-full inset-0`}
             >
               <h2 className="text-white hover:underline p-1 pl-2 h-fit w-fit cursor-pointer">

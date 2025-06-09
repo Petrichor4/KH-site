@@ -33,9 +33,6 @@ export default function Nav() {
   // }
 
   const [visible, setVisible] = useState(false);
-  const [size, setSize] = useState<{ width: number; height: number } | null>(
-    null
-  );
   const [loading, setLoading] = useState(false);
   const { isAdmin } = useIsAdmin();
   const [photos, setPhotos] = useState([]);
@@ -48,16 +45,6 @@ export default function Nav() {
     }
   }, []);
   console.log(photos);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const updateSize = () =>
-        setSize({ width: window.innerWidth, height: window.innerHeight });
-      updateSize(); // Set initial size immediately
-      window.addEventListener("resize", updateSize);
-      return () => window.removeEventListener("resize", updateSize);
-    }
-  }, []);
 
   const handleEditHeaderData = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -87,8 +74,7 @@ export default function Nav() {
 
   return (
     <nav className="h-0 lg:w-full">
-      {size && size.width >= 1025 ? (
-        <div className="flex flex-row absolute top-[3vh] w-[91%] 2xl:w-[95%] justify-between text-2xl">
+        <div className="lg:flex flex-row absolute top-[3vh] w-[91%] 2xl:w-[95%] justify-between text-2xl hidden">
           <Link className="hover:underline" href={"/blog"}>
             <h2>Blog</h2>
           </Link>
@@ -147,11 +133,10 @@ export default function Nav() {
             </CustomModal>
           )}
         </div>
-      ) : (
         <DrawerRoot size={"lg"}>
           <DrawerBackdrop />
           <DrawerTrigger>
-            <VscMenu className="nav-button absolute top-4 right-4" size={30} />
+            <VscMenu className="nav-button absolute top-4 right-4 lg:hidden" size={30} />
           </DrawerTrigger>
           <DrawerContent bg={"white"}>
             <DrawerCloseTrigger onClick={() => setVisible(false)} />
@@ -236,7 +221,6 @@ export default function Nav() {
             <DrawerFooter />
           </DrawerContent>
         </DrawerRoot>
-      )}
     </nav>
   );
 }

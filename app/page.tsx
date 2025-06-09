@@ -31,11 +31,7 @@ const monsieurLaDoulaise = Monsieur_La_Doulaise({
 
 export default function Home() {
   const { isAdmin } = useIsAdmin();
-  const [headerData, setHeaderData] = useState<HeaderData[]>([{
-    hero_image: "https://www.makerstations.io/content/images/2022/03/olja-lobkis-studygram-04.jpeg",
-    portrait: "https://i.pinimg.com/1200x/2e/31/d9/2e31d9f77bcf7bbea64257292a9fad55.jpg",
-    about_me: ""
-  }]);
+  const [headerData, setHeaderData] = useState<HeaderData[]>([]);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
@@ -112,9 +108,15 @@ export default function Home() {
     }
   };
 
+  if (headerData.length === 0) return (
+  <main className="flex justify-center items-center">
+    {/* <Spinner className="h-40 w-40" /> */}
+  </main>
+);
+
   return (
     <>
-      <motion.header className="w-full flex flex-wrap justify-center">
+      <motion.header initial={{opacity: 0, scale: 1.2}} animate={{opacity: 1, scale: 1, transition: {duration: .5}}} className="w-full flex flex-wrap justify-center">
         <div className="lg:flex lg:h-screen max-w-[2000px]">
           <div className="lg:w-1/2 lg:h-full lg:flex lg:flex-col justify-around">
             {size && size.width < 1025 && <Nav />}
