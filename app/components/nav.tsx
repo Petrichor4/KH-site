@@ -21,19 +21,40 @@ import {
   FieldLabel,
   Input,
   Textarea,
+  IconButton,
 } from "@chakra-ui/react";
 import { useIsAdmin } from "./useIsAdmin";
 import { editHeaderData } from "../lib/actions";
 import CustomModal from "./customModal";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  CldUploadWidget,
+  CloudinaryUploadWidgetResults,
+} from "next-cloudinary";
+import { LuImagePlus } from "react-icons/lu";
 
 export default function Nav() {
+
+  // interface Photos {
+  //   id: string
+  // }
+
   const [visible, setVisible] = useState(false);
   const [size, setSize] = useState<{ width: number; height: number } | null>(
     null
   );
   const [loading, setLoading] = useState(false);
   const { isAdmin } = useIsAdmin();
+  const [photos, setPhotos] = useState([])
+
+  useEffect(()=> {
+    try {
+      setPhotos(JSON.parse(localStorage.getItem("uploadedImages") || ''))
+    } catch (error) {
+      console.log(`error getting photos from localstorage: ${error}`)
+    }
+  },[])
+  console.log(photos)
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -68,6 +89,16 @@ export default function Nav() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleUploadSuccess = (publicId: string) => {
+    const storedImages = JSON.parse(
+      localStorage.getItem("uploadedImages") || "[]"
+    );
+    const updatedImages = [...storedImages, publicId];
+
+    // Update the context and localStorage
+    localStorage.setItem("uploadedImages", JSON.stringify(updatedImages));
   };
 
   // Prevent rendering until size is determined
@@ -105,9 +136,59 @@ export default function Nav() {
               <form onSubmit={handleEditHeaderData}>
                 <Fieldset.Root>
                   <Stack>
+                    <CldUploadWidget
+                      // Cloudinary upload preset
+                      uploadPreset="ml_default"
+                      // What options show up in the widget
+                      options={{
+                        sources: [
+                          "local",
+                          "url",
+                          "camera",
+                          "google_drive",
+                          "dropbox",
+                        ],
+                        styles: { container: "cloudinary-widget" },
+                      }}
+                      // What to do with the upload results
+                      onSuccess={(results: CloudinaryUploadWidgetResults) => {
+                        if (
+                          typeof results.info === "object" &&
+                          results.info?.public_id
+                        ) {
+                          handleUploadSuccess(results.info.public_id);
+                        } else {
+                          console.error("Invalid upload results:", results);
+                        }
+                      }}
+                    >
+                      {({ open }) => (
+                        <div>
+                          <IconButton
+                            p={3}
+                            className="hidden md:flex mx-3 hover:cursor-pointer active:scale-[.95] justify-center items-center"
+                            onClick={() => open()}
+                          >
+                            Upload Image
+                          </IconButton>
+                          <IconButton
+                            className="md:hidden rounded-full"
+                            onClick={() => open()}
+                          >
+                            <LuImagePlus />
+                          </IconButton>
+                        </div>
+                      )}
+                    </CldUploadWidget>
+
                     <Field.Root>
                       <FieldLabel>Hero Photo</FieldLabel>
-                      <Input name="heroPhoto" />
+                      <Input name="heroPhoto" type="text" list="photos"/>
+                      <datalist id="photos">
+                        {photos.map((photo: string, index: number) => (
+                          <option key={index}>{photo}</option>
+                        ))}
+                      </datalist>
                     </Field.Root>
                     <Field.Root>
                       <FieldLabel>Portrait</FieldLabel>
@@ -123,7 +204,7 @@ export default function Nav() {
                   <Button
                     type="submit"
                     bg={"#828698"}
-                    _hover={{opacity: "50%"}}
+                    _hover={{ opacity: "50%" }}
                     size={"lg"}
                     loading={loading}
                   >
@@ -182,7 +263,7 @@ export default function Nav() {
                 {visible && (
                   <motion.div
                     className="editContainer w-full py-8"
-                    transition={{duration: .8,ease: [0, 0.71, 0.2, 1.01]}}
+                    transition={{ duration: 0.8, ease: [0, 0.71, 0.2, 1.01] }}
                     initial={{ y: -20, opacity: 0, height: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={{ y: -20, opacity: 0, height: 0 }}
@@ -208,7 +289,7 @@ export default function Nav() {
                         <Button
                           type="submit"
                           bg={"#828698"}
-                          _hover={{opacity: "50%"}}
+                          _hover={{ opacity: "50%" }}
                           size={"lg"}
                           loading={loading}
                         >

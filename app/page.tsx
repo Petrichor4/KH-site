@@ -10,6 +10,7 @@ import BookCard from "./components/bookCard";
 import { useIsAdmin } from "./components/useIsAdmin";
 import { HiOutlinePlus } from "react-icons/hi";
 import CustomModal from "./components/customModal";
+import { motion } from "framer-motion";
 import {
   Button,
   Fieldset,
@@ -29,7 +30,11 @@ const monsieurLaDoulaise = Monsieur_La_Doulaise({
 
 export default function Home() {
   const { isAdmin } = useIsAdmin();
-  const [headerData, setHeaderData] = useState<HeaderData[]>([]);
+  const [headerData, setHeaderData] = useState<HeaderData[]>([{
+    hero_image: "https://i.stack.imgur.com/mwFzF.png",
+    portrait: "https://i.stack.imgur.com/mwFzF.png",
+    about_me: ""
+  }]);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
@@ -109,7 +114,7 @@ export default function Home() {
   if (!size) return null;
   return (
     <>
-      <header className="w-full flex flex-wrap justify-center">
+      <motion.header className="w-full flex flex-wrap justify-center">
         <div className="lg:flex lg:h-screen max-w-[2000px]">
           <div className="lg:w-1/2 lg:h-full lg:flex lg:flex-col justify-around">
             {size.width < 1025 && <Nav />}
@@ -130,7 +135,7 @@ export default function Home() {
               {size.width > 1025 && <Nav />}
               <Image
                 src={headerData[0]?.hero_image}
-                className="lg:h-[95%]"
+                className="lg:h-[95%] min-w-full"
                 alt="Photo of desk with various writing accesories"
               />
             </div>
@@ -142,7 +147,7 @@ export default function Home() {
             desc={headerData[0]?.about_me}
           />
         )}
-      </header>
+      </motion.header>
       <main className="mt-4">
         {visible && (
           <CustomModal

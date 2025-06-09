@@ -9,6 +9,7 @@ import Footer from "./components/footer";
 const LCD = Libre_Caslon_Display({
   weight: "400",
   subsets: ["latin"],
+  display: "swap"
 });
 
 export const metadata: Metadata = {
