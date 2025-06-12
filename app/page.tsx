@@ -142,7 +142,7 @@ export default function Home() {
           <Image
             src={headerData[0].hero_image}
             alt="Photo of a writing desk belonging to Kierstyn Hart"
-            className="w-full"
+            className="w-full max-h-full"
           ></Image>
         </div>
       </motion.header>
