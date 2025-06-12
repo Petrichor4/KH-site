@@ -135,7 +135,7 @@ export default function Home() {
           Kierstyn Hart
         </motion.h1>
         <div
-          className="flex w-11/12 h-full relative max-h-[532px] md:max-w-none"
+          className="flex w-11/12 h-full relative"
           style={{ border: "4px solid black" }}
         >
           <motion.span className="h-full w-full bg-gray-800 absolute top-0 left-0" initial={{opacity: 1}} animate={{opacity:0, transition: {delay: 1, duration: 0.8}}}></motion.span>

@@ -77,7 +77,7 @@ export default function Nav() {
         <div className="lg:flex flex-row w-2/5 max-w-[665px] justify-between items-center text-2xl xl:text-4xl hidden h-40">
           <Link className="hover:underline relative inline-block" href={"/blog"} >
             <h2 className="z-10">Blog</h2>
-            <motion.span className="h-[2px] w-[45px] z-0 absolute bottom-[2px] bg-black"></motion.span>
+            {/* <motion.span className="h-[2px] w-[45px] z-0 absolute bottom-[2px] bg-black"></motion.span> */}
           </Link>
           <Link className="hover:underline" href={"/writings"}>
             <h2>Writings</h2>
