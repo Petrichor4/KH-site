@@ -73,8 +73,8 @@ export default function Nav() {
 
 
   return (
-    <nav className="h-0 lg:w-full">
-        <div className="lg:flex flex-row absolute top-[3vh] w-[91%] 2xl:w-[95%] justify-between text-2xl hidden">
+    <nav className="lg:w-full lg:flex justify-center">
+        <div className="lg:flex flex-row w-2/5 max-w-[665px] justify-between items-center text-2xl xl:text-4xl hidden h-40">
           <Link className="hover:underline" href={"/blog"}>
             <h2>Blog</h2>
           </Link>
@@ -89,7 +89,7 @@ export default function Nav() {
           </Link>
           {isAdmin && (
             <button
-              className="hover:underline hover:bg-transparent hover:text-white hover:cursor-pointer"
+              className="hover:underline hover:cursor-pointer"
               onClick={() => setVisible((prev) => !prev)}
             >
               Edit
@@ -143,7 +143,7 @@ export default function Nav() {
             <DrawerHeader>
               <DrawerTitle />
             </DrawerHeader>
-            <DrawerBody className="flex justify-center mt-8 text-black flex-col items-center">
+            <DrawerBody className="flex mt-8 text-black flex-col items-center">
               <div className="flex flex-col text-5xl gap-6">
                 <Link href={"/blog"} className="active:underline">
                   <h2>Blog</h2>

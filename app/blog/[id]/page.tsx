@@ -1,12 +1,13 @@
 "use client";
 import { Blog } from "@/app/lib/definitions";
 import { usePathname } from "next/navigation";
+import { useIsAdmin } from "@/app/components/useIsAdmin";
 import { FormEvent, useEffect, useState } from "react";
 import {
   deleteBlogPost,
   editBlogPost,
   getBlog,
-  getUserAdminStatus,
+  getComments
 } from "@/app/lib/actions";
 import Link from "next/link";
 import { HiChevronLeft } from "react-icons/hi2";
@@ -27,7 +28,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import DOMPurify from "dompurify";
-import { useSession } from "next-auth/react";
+import { Comment } from "@/app/lib/definitions";
 import CustomModal from "@/app/components/customModal";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
@@ -73,33 +74,21 @@ export default function BlogPost() {
     post: "",
     photo: "",
   });
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [comments, setComments] = useState<Comment[]>([]);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [post, setPost] = useState("");
-  const { data: session } = useSession();
+  const { isAdmin } = useIsAdmin();
   const { scrollY } = useScroll();
   const id = Number(usePathname().split("/")[2]);
   const safeContent = DOMPurify.sanitize(blog.post);
 
-  const headerTitleOpacity = useTransform(scrollY, [0, 50], ["0", "1"]);
+  const headerTitleOpacity = useTransform(scrollY, [0, 20], ["0", "1"]);
+  const headerTitleOpacityNeg = useTransform(scrollY, [0, 10], ["1", "0"]);
 
   console.log(blog.id);
   console.log(id);
-
-  useEffect(() => {
-    if (!session?.user?.name) {
-      return;
-    }
-    const username = session?.user?.name;
-    const fetchAdminStatus = async () => {
-      const response = await getUserAdminStatus(username);
-      if (response && response.admin !== undefined) {
-        setIsAdmin(response.admin);
-      }
-    };
-    fetchAdminStatus();
-  }, [session?.user?.name]);
+  console.log(comments)
 
   useEffect(() => {
     if (!id) {
@@ -109,7 +98,12 @@ export default function BlogPost() {
       const result = await getBlog(id);
       setBlog(result[0]);
     };
+    const fetchComments = async () => {
+      const result = await getComments(id.toString())
+      setComments(result);
+    }
     fetchBlog();
+    fetchComments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -177,7 +171,7 @@ export default function BlogPost() {
           </motion.h1>
         </Link>
         {isAdmin && (
-          <Button size={"lg"} onClick={() => setVisible(true)}>
+          <Button size={"lg"} variant={"outline"} onClick={() => setVisible(true)}>
             Edit
           </Button>
         )}
@@ -253,7 +247,7 @@ export default function BlogPost() {
           </CustomModal>
         )}
 
-        <h1 className="p-4 md:px-20 text-2xl md:text-3xl">{blog.title}</h1>
+        <motion.h1 className="p-4 md:px-20 text-2xl md:text-3xl" style={{ opacity: headerTitleOpacityNeg }}>{blog.title}</motion.h1>
 
         <div className="flex justify-center mt-[2%] p-3">
           <Image
@@ -263,9 +257,12 @@ export default function BlogPost() {
           />
         </div>
         <div
-          className="p-3 md:px-40 md:text-xl text-justify indent-5 md:indent-10"
+          className="p-3 md:px-40 pb-40 md:text-xl text-justify indent-5 md:indent-10"
           dangerouslySetInnerHTML={{ __html: safeContent }}
         ></div>
+        <Stack>
+
+        </Stack>
       </main>
     </>
   );

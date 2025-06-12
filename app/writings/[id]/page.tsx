@@ -1,8 +1,8 @@
 "use client";
-import { Writing } from "@/app/lib/definitions";
+import { Writing, Comment } from "@/app/lib/definitions";
 import { usePathname } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
-import { getWriting, getUserAdminStatus, deleteWritingPost, editWritingPost } from "@/app/lib/actions";
+import { getWriting, deleteWritingPost, editWritingPost, getComments } from "@/app/lib/actions";
 import Link from "next/link";
 import { HiChevronLeft } from "react-icons/hi2";
 import {
@@ -21,8 +21,9 @@ import {
   PopoverTitle,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useSession } from "next-auth/react";
 import CustomModal from "@/app/components/customModal";
+import CommentCard from "@/app/components/commentCard";
+import { useIsAdmin } from "@/app/components/useIsAdmin";
 import DOMPurify from "dompurify";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
@@ -70,35 +71,20 @@ export default function WritingsPost() {
     content: "",
     photo: "",
   });
-  const id = usePathname().split("/")[2];
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const { scrollY } = useScroll();
   const [post, setPost] = useState('');
-  const {data: session} = useSession();
+  const [comments, setComments] = useState();
   const safeContent = DOMPurify.sanitize(writing.content);
+  const id = usePathname().split("/")[2];
+  const { isAdmin } = useIsAdmin();
+  const { scrollY } = useScroll();
 
   const headerTitleOpacity = useTransform(scrollY, [0, 50], ["0", "1"]);
 
 
   console.log(writing);
-  console.log(id);
-
-    useEffect(() => {
-      if (!session?.user?.name) {
-        return;
-      }
-      const username = session?.user?.name;
-      const fetchAdminStatus = async () => {
-        const response = await getUserAdminStatus(username);
-        if (response && response.admin !== undefined) {
-          setIsAdmin(response.admin);
-        }
-      };
-      fetchAdminStatus();
-    }, [session?.user?.name]);
-  
+  console.log(id);  
 
   useEffect(() => {
     if (!id) {
@@ -108,7 +94,13 @@ export default function WritingsPost() {
       const result = await getWriting(id);
       setWriting(result[0]);
     };
+        const fetchComments = async () => {
+          const result = await getComments(id.toString())
+          setComments(result);
+        }
+    
     fetchBlog();
+    fetchComments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -245,8 +237,11 @@ export default function WritingsPost() {
         </div>
         <div
           dangerouslySetInnerHTML={{ __html: safeContent }}
-          className="p-3 md:px-40 md:text-xl text-justify indent-5 md:indent-10"
+          className="p-3 md:px-40 md:text-xl text-justify indent-5 md:indent-10 pb-40"
         ></div>
+        <Stack>
+          {/* <CommentCard text= ></CommentCard> */}
+        </Stack>
       </main>
     </>
   );

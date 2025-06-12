@@ -14,7 +14,6 @@
   }
 }
 
-
 main {
   min-height: 95vh;
 }
@@ -26,12 +25,7 @@ body {
 }
 
 Input {
-  border: black 1px solid;
   padding-left: 8px;
-}
-
-textarea {
-  border: black 1px solid;
 }
 
 .contact-form > * {
@@ -42,30 +36,7 @@ form > button {
   padding: 16px;
 }
 
-.navButton {
-  padding: 0px;
-}
-
-/* .chakra-button {
-  color: white;
-}
-
-.chakra-button:hover {
-  background: #828698;
-  opacity: 50%;
-} */
-/*
-Button:hover {
+textarea, input {
   color: black;
-  background-color: white;
-} */
-
-/* form > * {
-  color: black;
-} */
-
-.nav-button:hover {
-  background-color: #828698;
-  color: white;
-  cursor: pointer;
+  font-size:20px;
 }

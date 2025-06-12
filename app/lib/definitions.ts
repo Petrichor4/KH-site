@@ -33,3 +33,10 @@ export interface Book {
   price: string;
   links: string[];
 }
+
+export interface Comment {
+  id: number;
+  type: string;
+  author: string;
+  body: string;
+}

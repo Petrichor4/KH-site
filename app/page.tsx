@@ -26,7 +26,7 @@ const monsieurLaDoulaise = Monsieur_La_Doulaise({
   preload: true,
   subsets: ["latin"],
   style: "normal",
-  display: "swap"
+  display: "swap",
 });
 
 export default function Home() {
@@ -35,19 +35,19 @@ export default function Home() {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
-  const [size, setSize] = useState<{ width: number; height: number } | null>(
-    null
-  );
+  // const [size, setSize] = useState<{ width: number; height: number } | null>(
+  //   null
+  // );
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const updateSize = () =>
-        setSize({ width: window.innerWidth, height: window.innerHeight });
-      updateSize(); // Set initial size immediately
-      window.addEventListener("resize", updateSize);
-      return () => window.removeEventListener("resize", updateSize);
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (typeof window !== "undefined") {
+  //     const updateSize = () =>
+  //       setSize({ width: window.innerWidth, height: window.innerHeight });
+  //     updateSize(); // Set initial size immediately
+  //     window.addEventListener("resize", updateSize);
+  //     return () => window.removeEventListener("resize", updateSize);
+  //   }
+  // }, []);
 
   // Prevent rendering until size is determined
 
@@ -108,69 +108,72 @@ export default function Home() {
     }
   };
 
-  if (headerData.length === 0) return (
-  <main className="flex justify-center items-center">
-    {/* <Spinner className="h-40 w-40" /> */}
-  </main>
-);
+  if (headerData.length === 0)
+    return (
+      <main className="flex justify-center items-center">
+        {/* <Spinner className="h-40 w-40" /> */}
+      </main>
+    );
 
   return (
-    <>
-      <motion.header initial={{opacity: 0, scale: 1.2}} animate={{opacity: 1, scale: 1, transition: {duration: .5}}} className="w-full flex flex-wrap justify-center">
-        <div className="lg:flex lg:h-screen max-w-[2000px]">
-          <div className="lg:w-1/2 lg:h-full lg:flex lg:flex-col justify-around">
-            {size && size.width < 1025 && <Nav />}
-            <h1
-              className={`${monsieurLaDoulaise.className} text-5xl lg:text-7xl xl:text-8xl text-center p-12 pl-4`}
-            >
-              Kierstyn Hart
-            </h1>
-            {size && size.width > 1025 && (
-              <InfoCard
-                image={headerData[0]?.portrait}
-                desc={headerData[0]?.about_me}
-              />
-            )}
-          </div>
-          <div className={`lg:w-1/2`}>
-            <div className="lg:h-full max-md:max-h-[30vh] lg:p-6 overflow-hidden flex justify-center items-end lg:justify-end relative">
-              {size && size.width > 1025 && <Nav />}
-              <Image
-                src={headerData[0]?.hero_image}
-                className="lg:h-[95%] min-w-full"
-                alt="Photo of desk with various writing accesories"
-              />
-            </div>
-          </div>
+    <motion.div initial={{ opacity: 0, transition: {duration: .3}}} animate={{opacity: 1}}>
+      <Nav></Nav>
+      <motion.header
+        // initial={{ opacity: 0, scale: 1.2 }}
+        // animate={{ opacity: 1, scale: 1, transition: { duration: 0.5 } }}
+        className="w-full flex flex-wrap justify-center h-[81vh]"
+      >
+        <motion.h1
+          className={`${monsieurLaDoulaise.className} text-5xl sm:text-6xl md:text-7xl lg:text-9xl xl:text-[160px] p-12 py-20 pl-6`}
+          initial={{ y: 80, opacity: 0 }}
+          animate={{
+            y: 0,
+            opacity: 1,
+            transition: { delay: 0.5, duration: 1 },
+          }}
+        >
+          Kierstyn Hart
+        </motion.h1>
+        <div
+          className="flex w-11/12 h-full relative"
+          style={{ border: "4px solid black" }}
+        >
+          <motion.span className="h-full w-full bg-gray-800 absolute top-0 left-0" initial={{opacity: 1}} animate={{opacity:0, transition: {delay: 1, duration: 0.8}}}></motion.span>
+          <Image
+            src={headerData[0].hero_image}
+            alt="Photo of a writing desk belonging to Kierstyn Hart"
+            className="w-full"
+          ></Image>
         </div>
-        {size && size.width < 1025 && (
-          <InfoCard
-            image={headerData[0]?.portrait}
-            desc={headerData[0]?.about_me}
-          />
-        )}
       </motion.header>
-      <main className="mt-4">
+      <main className="mt-4 bg-slate-400 flex flex-wrap flex-col">
         {visible && (
           <CustomModal
             title="New Book"
             isOpen={true}
             onClose={() => setVisible(false)}
           >
-            <form onSubmit={handleAddBook}>
+            <form
+              onSubmit={handleAddBook}
+              className="flex justify-between flex-col"
+            >
               <Fieldset.Root>
                 <Stack>
                   <Field.Root>
                     <FieldLabel>Photo</FieldLabel>
-                    <Input name="photo" />
+                    <Input name="photo" variant={"subtle"} />
                   </Field.Root>
                   <Field.Root>
                     <FieldLabel>Title</FieldLabel>
-                    <Input name="title" />
+                    <Input name="title" variant={"subtle"} />
                   </Field.Root>
                   <Field.Root>
                     <FieldLabel>Description</FieldLabel>
-                    <Textarea name="description" className="h-40"></Textarea>
+                    <Textarea
+                      name="description"
+                      className="h-40"
+                      variant={"subtle"}
+                    ></Textarea>
                   </Field.Root>
                 </Stack>
               </Fieldset.Root>
@@ -187,7 +190,13 @@ export default function Home() {
             </form>
           </CustomModal>
         )}
-        <h2 className="text-center text-3xl lg:text-5xl p-4">Books</h2>
+        <span className="h-[23vh] w-full block"></span>
+        <div className="w-2/3 self-center my-16">
+          <InfoCard image={headerData[0].portrait} desc={headerData[0].about_me}></InfoCard>
+        </div>
+        <h2 className="flex justify-center items-center text-3xl lg:text-5xl p-4 h-60">
+          Books
+        </h2>
         <SimpleGrid columns={{ base: 2, lg: 3 }} p={4} className="gap-y-4">
           {books.map((book, index) => (
             <div className="flex justify-center my-2.5" key={index}>
@@ -208,6 +217,6 @@ export default function Home() {
           )}
         </SimpleGrid>
       </main>
-    </>
+    </motion.div>
   );
 }

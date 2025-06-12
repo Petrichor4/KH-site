@@ -1,7 +1,7 @@
 "use server";
 
 import { sql } from "@vercel/postgres";
-import { Blog, Book, HeaderData, User, Writing } from "./definitions";
+import { Blog, Book, HeaderData, User, Writing, Comment } from "./definitions";
 import bcrypt from "bcrypt";
 
 export async function getHeaderData(): Promise<HeaderData[]> {
@@ -16,11 +16,15 @@ export async function getHeaderData(): Promise<HeaderData[]> {
   }
 }
 
-export async function editHeaderData(heroPhoto: string, selfie: string, bio: string) {
+export async function editHeaderData(
+  heroPhoto: string,
+  selfie: string,
+  bio: string
+) {
   try {
-    await sql<HeaderData>`UPDATE kh SET about_me = ${bio}, portrait = ${selfie}, hero_image = ${heroPhoto}`
+    await sql<HeaderData>`UPDATE kh SET about_me = ${bio}, portrait = ${selfie}, hero_image = ${heroPhoto}`;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
 }
 
@@ -29,7 +33,6 @@ export async function editHeaderData(heroPhoto: string, selfie: string, bio: str
 User actions
 ---------------
 */
-
 
 export async function addUser(username: string, password: string) {
   const saltRounds = 10;
@@ -53,11 +56,12 @@ export async function getUserByUsername(username: string) {
 
 export async function getUserAdminStatus(username: string) {
   try {
-    const result = await sql`SELECT admin FROM users WHERE username = ${username}`
-    return result.rows[0]
+    const result =
+      await sql`SELECT admin FROM users WHERE username = ${username}`;
+    return result.rows[0];
   } catch (error) {
     console.error(error);
-    return false
+    return false;
   }
 }
 
@@ -91,26 +95,30 @@ export async function getBlog(id: number) {
   }
 }
 
-
 export async function addBlogPost(photo: string, title: string, post: string) {
   try {
-    await sql`INSERT INTO blogs (photo, title, post) VALUES (${photo}, ${title}, ${post})`
+    await sql`INSERT INTO blogs (photo, title, post) VALUES (${photo}, ${title}, ${post})`;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
-export async function editBlogPost(photo: string, title: string, post: string, id: string) {
+export async function editBlogPost(
+  photo: string,
+  title: string,
+  post: string,
+  id: string
+) {
   try {
-    await sql`UPDATE blogs SET photo =${photo}, title = ${title}, post = ${post} WHERE id = ${id}`
+    await sql`UPDATE blogs SET photo =${photo}, title = ${title}, post = ${post} WHERE id = ${id}`;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
 export async function deleteBlogPost(id: string) {
   try {
-    await sql`DELETE FROM blogs WHERE id = ${id}`
+    await sql`DELETE FROM blogs WHERE id = ${id}`;
   } catch (error) {
     console.error(error);
   }
@@ -126,47 +134,67 @@ export async function getWritings() {
   try {
     const result = await sql<Writing>`
       SELECT * FROM writings ORDER BY id DESC
-    `
-    return result.rows
+    `;
+    return result.rows;
   } catch (error) {
     console.error(error);
-    return []
+    return [];
   }
 }
 
 export async function getWriting(id: string) {
   try {
     const result = await sql<Writing>`Select * FROM writings WHERE id = ${id}`;
-    return result.rows
+    return result.rows;
   } catch (error) {
     console.log(error);
-    return []
+    return [];
   }
 }
 
-export async function addWritingPost(photo: string, title: string, content: string) {
+export async function addWritingPost(
+  photo: string,
+  title: string,
+  content: string
+) {
   try {
-    await sql`INSERT INTO writings (photo, title, content) VALUES (${photo}, ${title}, ${content})`
+    await sql`INSERT INTO writings (photo, title, content) VALUES (${photo}, ${title}, ${content})`;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
-export async function editWritingPost(photo: string, title: string, content: string, id: string) {
+export async function editWritingPost(
+  photo: string,
+  title: string,
+  content: string,
+  id: string
+) {
   try {
-    await sql`UPDATE writings SET photo =${photo}, title = ${title}, content = ${content} WHERE id = ${id}`
+    await sql`UPDATE writings SET photo =${photo}, title = ${title}, content = ${content} WHERE id = ${id}`;
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 }
 
 export async function deleteWritingPost(id: string) {
   try {
-    await sql`DELETE FROM writings WHERE id = ${id}`
+    await sql`DELETE FROM writings WHERE id = ${id}`;
   } catch (error) {
     console.error(error);
   }
 }
+
+export async function getComments(id: string) {
+  try {
+    const result = await sql<Comment>`SELECT * FROM comments WHERE writings_id = ${id} ORDER BY created_at DESC`;
+    return result.rows
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
 
 /*
 ---------------
@@ -176,43 +204,52 @@ Book actions
 
 export async function getBooks() {
   try {
-    const result = await sql<Book>`SELECT * FROM books ORDER BY 2 ASC`
+    const result = await sql<Book>`SELECT * FROM books ORDER BY 2 ASC`;
     return result.rows;
   } catch (error) {
     console.error(error);
-    return []
+    return [];
   }
 }
 
 export async function getBookById(id: string) {
   try {
-    const result = await sql<Book>`SELECT * FROM books WHERE id = ${id}`
+    const result = await sql<Book>`SELECT * FROM books WHERE id = ${id}`;
     return result.rows;
   } catch (error) {
-    console.error(error)
-    return []
+    console.error(error);
+    return [];
   }
 }
 
-export async function editBook(id: string, title: string, description: string, photo: string) {
+export async function editBook(
+  id: string,
+  title: string,
+  description: string,
+  photo: string
+) {
   try {
-    await sql<Book>`UPDATE books SET title = ${title}, description = ${description}, photo = ${photo} WHERE id = ${id}`
-  } catch  (error) {
-    console.error(error)
+    await sql<Book>`UPDATE books SET title = ${title}, description = ${description}, photo = ${photo} WHERE id = ${id}`;
+  } catch (error) {
+    console.error(error);
   }
 }
 
-export async function addBook(title: string, description: string, photo: string) {
+export async function addBook(
+  title: string,
+  description: string,
+  photo: string
+) {
   try {
-    await sql<Book>`INSERT INTO books (title, description, photo) VALUES (${title},${description},${photo})`
- } catch (error) {
-  console.error(error)
- }
+    await sql<Book>`INSERT INTO books (title, description, photo) VALUES (${title},${description},${photo})`;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 export async function deleteBook(id: string) {
   try {
-    await sql<Book>`DELETE FROM books WHERE id = ${id}`
+    await sql<Book>`DELETE FROM books WHERE id = ${id}`;
   } catch (error) {
     console.error(error);
   }
