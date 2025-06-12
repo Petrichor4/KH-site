@@ -190,8 +190,8 @@ export default function Home() {
             </form>
           </CustomModal>
         )}
-        <span className="h-[23vh] w-full block"></span>
-        <div className="w-2/3 self-center my-16">
+        <span className="h-[23.15vh] w-full block"></span>
+        <div className="w-2/3 self-center mt-32">
           <InfoCard image={headerData[0].portrait} desc={headerData[0].about_me}></InfoCard>
         </div>
         <h2 className="flex justify-center items-center text-3xl lg:text-5xl p-4 h-60">

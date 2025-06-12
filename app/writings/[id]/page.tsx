@@ -74,7 +74,7 @@ export default function WritingsPost() {
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
   const [post, setPost] = useState('');
-  const [comments, setComments] = useState();
+  const [comments, setComments] = useState<Comment[]>([]);
   const safeContent = DOMPurify.sanitize(writing.content);
   const id = usePathname().split("/")[2];
   const { isAdmin } = useIsAdmin();
@@ -240,7 +240,7 @@ export default function WritingsPost() {
           className="p-3 md:px-40 md:text-xl text-justify indent-5 md:indent-10 pb-40"
         ></div>
         <Stack>
-          {/* <CommentCard text= ></CommentCard> */}
+          <CommentCard comment={comments[0].body} ></CommentCard>
         </Stack>
       </main>
     </>
