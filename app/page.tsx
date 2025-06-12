@@ -194,7 +194,7 @@ export default function Home() {
         <div className="w-2/3 self-center mt-32">
           <InfoCard image={headerData[0].portrait} desc={headerData[0].about_me}></InfoCard>
         </div>
-        <h2 className="flex justify-center items-center text-3xl lg:text-5xl p-4 h-60">
+        <h2 className="flex justify-center items-center text-3xl md:text-4xl lg:text-5xl p-4 mt-4 h-20 md:h-36 lg:h-60">
           Books
         </h2>
         <SimpleGrid columns={{ base: 2, lg: 3 }} p={4} className="gap-y-4">

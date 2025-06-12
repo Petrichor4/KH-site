@@ -10,7 +10,7 @@ export default function InfoCard({
 }) {
   return (
     <div className="flex p-2 justify-around h-1/2 overflow-hidden">
-      <div className="w-1/3 overflow-hidden flex justify-center items-center lg:h-[45vh]"style={{ border: "4px solid black" }}>
+      <div className="w-1/3 h-60 overflow-hidden flex justify-center items-center lg:h-[45vh] max-h-[532px] md:max-w-none"style={{ border: "4px solid black" }}>
         <Image
           className="min-w-full min-h-full sm:max-lg:h-5/6"
           src={image}
