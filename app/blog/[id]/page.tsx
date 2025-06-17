@@ -251,7 +251,7 @@ export default function BlogPost() {
 
         <div className="flex justify-center mt-[2%] p-3">
           <Image
-            className="w-auto max-h-[500px] rounded-xl"
+            className="w-auto max-h-[500px] rounded-xl border-solid border-black border-2"
             src={blog.photo}
             alt={`title photo for ${blog.title}`}
           />

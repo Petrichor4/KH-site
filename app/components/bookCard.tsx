@@ -16,7 +16,7 @@ import {
   Textarea
 } from "@chakra-ui/react";
 
-export default function BookCard({ book }: { book: Book }) {
+export default function BookCard({ book, onDelete }: { book: Book, onDelete: () => void }) {
   const { isAdmin } = useIsAdmin();
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -56,6 +56,9 @@ export default function BookCard({ book }: { book: Book }) {
   const handleDeleteBook = async() => {
     try {
       await deleteBook(book.id)
+      alert("Book Deleted.");
+      setVisible(false);
+      if (onDelete) onDelete();
     } catch (error) {
       console.error(error)
     }
@@ -114,9 +117,9 @@ export default function BookCard({ book }: { book: Book }) {
       )}
       <Link
         href={`/book/${book.id}`}
-        className="flex flex-col bg-[#6E7281] p-1 md:p-3 rounded-xl active:bg-inherit duration-200 hover:scale-[1.03]"
+        className="flex flex-col duration-200 hover:scale-[.99] active:scale-100 shadow-lg border-solid border-[1px] md:border-[3px] border-black"
       >
-        <div className="flex justify-center items-center rounded-t-xl overflow-hidden relative hover:cursor-pointer h-[200px] w-[150px] md:h-[300px] md:w-[200px] lg:h-[400px] lg:w-[300px] duration-300">
+        <div className="flex justify-center items-center overflow-hidden relative hover:cursor-pointer h-[200px] w-[150px] md:h-[300px] md:w-[200px] lg:h-[400px] lg:w-[300px] duration-300">
           <Image
             className="min-h-full relative"
             src={book.photo}
@@ -134,7 +137,7 @@ export default function BookCard({ book }: { book: Book }) {
             />
           )}
         </div>
-        <h2 className="p-1 md:pt-3 text-center md:text-xl lg:text-3xl rounded-b-xl h-fit w-inherit">{`${book.title}`}</h2>
+        <h2 className="p-1 md:pt-3 text-center md:text-xl lg:text-3xl h-fit w-inherit text-black bg-[#fbf8f3] border-solid border-t-[3px] border-black">{`${book.title}`}</h2>
       </Link>
     </div>
   );

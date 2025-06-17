@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 import { VscMenu } from "react-icons/vsc";
 import {
   DrawerBackdrop,
@@ -35,16 +35,6 @@ export default function Nav() {
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const { isAdmin } = useIsAdmin();
-  const [photos, setPhotos] = useState([]);
-
-  useEffect(() => {
-    try {
-      setPhotos(JSON.parse(localStorage.getItem("uploadedImages") || ""));
-    } catch (error) {
-      console.log(`error getting photos from localstorage: ${error}`);
-    }
-  }, []);
-  console.log(photos);
 
   const handleEditHeaderData = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

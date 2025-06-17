@@ -106,7 +106,7 @@ export default function Login() {
               type="submit"
               loading={loading}
               loadingText="Signing In"
-              className="text-black self-end active:opacity-75 text-xl"
+              className="self-end active:opacity-75 text-xl"
             >
               Sign In
             </Button>
@@ -116,7 +116,7 @@ export default function Login() {
             <button
               onClick={() => setLogIn(false)}
               type="button"
-              className="hover:underline hover:cursor-pointer text-black"
+              className="hover:underline hover:cursor-pointer"
             >
               Create one here
             </button>
@@ -148,7 +148,7 @@ export default function Login() {
               type="submit"
               loading={loading}
               loadingText="Creating account"
-              className="self-end active:opacity-75 mb-4 text-black text-xl"
+              className="self-end active:opacity-75 mb-4 text-xl"
             >
               Sign Up
             </Button>

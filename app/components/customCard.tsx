@@ -23,14 +23,14 @@ export default function CustomCard({
           },
         }}
         onHoverEnd={() => setVisibility(false)}
-        className="relative flex h-full w-full"
+        className="relative flex h-full w-full border-solid border-black border-2 rounded-[10px]"
         onMouseEnter={() => setVisibility(true)}
         onTap={() => setVisibility(true)}
         onBlur={() => setVisibility(false)}
         onMouseLeave={() => setVisibility(false)}
       >
         <Image
-          className="rounded-xl h-full w-full"
+          className="rounded-lg h-full w-full"
           src={post.photo}
           alt={`Title photo for blog post`}
           flex={"none"}
@@ -43,7 +43,7 @@ export default function CustomCard({
             <motion.div
               initial={{opacity:0}}
               animate={{opacity: 0.7, transition:{duration:.3}}}
-              className={`rounded-xl z-10 bg-black opacity-70 absolute w-full h-full inset-0`}
+              className={`rounded-lg z-10 bg-black opacity-70 absolute w-full h-full inset-0`}
             >
               <h2 className="text-white hover:underline p-1 pl-2 h-fit w-fit cursor-pointer">
                 {post.title}
