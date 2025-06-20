@@ -4,10 +4,11 @@ import { usePathname } from "next/navigation";
 import { useIsAdmin } from "@/app/components/useIsAdmin";
 import { FormEvent, useEffect, useState } from "react";
 import {
+  addComment,
   deleteBlogPost,
   editBlogPost,
   getBlog,
-  getComments
+  getCommentsForBlogs,
 } from "@/app/lib/actions";
 import Link from "next/link";
 import { HiChevronLeft } from "react-icons/hi2";
@@ -19,6 +20,7 @@ import {
   FieldLabel,
   Input,
   Image,
+  Textarea
 } from "@chakra-ui/react";
 import {
   PopoverBody,
@@ -32,7 +34,9 @@ import { Comment } from "@/app/lib/definitions";
 import CustomModal from "@/app/components/customModal";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
-import { motion, useTransform, useScroll } from "framer-motion";
+import { motion, useMotionValueEvent, useScroll } from "framer-motion";
+import CommentCard from "@/app/components/commentCard";
+import { useSession } from "next-auth/react";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -77,18 +81,25 @@ export default function BlogPost() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+  const [commentBody, setCommentBody] = useState("");
+  const [show, setShow] = useState(false);
   const [post, setPost] = useState("");
   const { isAdmin } = useIsAdmin();
+  const { data: session } = useSession();
   const { scrollY } = useScroll();
   const id = Number(usePathname().split("/")[2]);
   const safeContent = DOMPurify.sanitize(blog.post);
+  const [showHeader, setShowHeader] = useState(true);
 
-  const headerTitleOpacity = useTransform(scrollY, [0, 20], ["0", "1"]);
-  const headerTitleOpacityNeg = useTransform(scrollY, [0, 10], ["1", "0"]);
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    setShowHeader(latest < previous || latest < 100);
+  });
 
-  console.log(blog.id);
-  console.log(id);
-  console.log(comments)
+  // console.log(blog.id);
+  // console.log(id);
+  // console.log(comments)
 
   useEffect(() => {
     if (!id) {
@@ -99,13 +110,13 @@ export default function BlogPost() {
       setBlog(result[0]);
     };
     const fetchComments = async () => {
-      const result = await getComments(id.toString())
+      const result = await getCommentsForBlogs(id);
       setComments(result);
-    }
+    };
     fetchBlog();
     fetchComments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [refresh]);
 
   const handleEditPost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -141,15 +152,39 @@ export default function BlogPost() {
     }
   };
 
+    const handleAddComment = async () => {
+      if (typeof session?.user?.name === "string") {
+        const body = commentBody;
+        const username = session?.user?.name;
+        try {
+          if (!commentBody.trim()) {
+            alert("You cannot post an emtpy comment");
+            return;
+          }
+          await addComment(null, id, username, body);
+        } catch (error) {
+          console.error(error);
+          alert(`There was a problem posting your comment: ${error}`);
+        } finally {
+          setRefresh((prev) => !prev);
+          setShow(false);
+          setCommentBody("");
+        }
+      }
+    };
+  
+
   return (
     <>
       <motion.nav
-        className="p-4 sticky top-0 left-0 z-20 bg-inherit flex justify-between items-center"
-        // style={{ padding: headerPadding }}
+        className={`p-4 sticky top-0 left-0 z-20 lg:h-32 bg-gray-800 flex justify-between items-center ease-in-out`}
+        initial={{ y: 0 }}
+        animate={{ y: showHeader ? 0 : "-100%" }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
       >
         <Link href="/blog" className="active:border-none flex items-center">
           <motion.button
-            className="hover:cursor-pointer"
+            className="hover:cursor-pointer text-white"
             whileHover={{
               x: 10,
               transition: {
@@ -161,17 +196,19 @@ export default function BlogPost() {
             }}
             whileTap={{ scale: 0.9, x: 0 }}
           >
-            <HiChevronLeft size={40} />
+            <HiChevronLeft className="h-5 w-auto md:h-8" />
           </motion.button>
-          <motion.h1
-            className="text-white text-3xl lg:text-6xl"
-            style={{ opacity: headerTitleOpacity }}
-          >
+          <motion.h1 className="text-white text-xl md:text-3xl lg:text-4xl">
             {blog.title}
           </motion.h1>
         </Link>
         {isAdmin && (
-          <Button size={"lg"} variant={"outline"} onClick={() => setVisible(true)}>
+          <Button
+            className="text-2xl md:text-3xl text-white hover:underline"
+            size={"lg"}
+            variant={"plain"}
+            onClick={() => setVisible(true)}
+          >
             Edit
           </Button>
         )}
@@ -246,9 +283,6 @@ export default function BlogPost() {
             </form>
           </CustomModal>
         )}
-
-        <motion.h1 className="p-4 md:px-20 text-2xl md:text-3xl" style={{ opacity: headerTitleOpacityNeg }}>{blog.title}</motion.h1>
-
         <div className="flex justify-center mt-[2%] p-3">
           <Image
             className="w-auto max-h-[500px] rounded-xl border-solid border-black border-2"
@@ -260,9 +294,57 @@ export default function BlogPost() {
           className="p-3 md:px-40 pb-40 md:text-xl text-justify indent-5 md:indent-10"
           dangerouslySetInnerHTML={{ __html: safeContent }}
         ></div>
-        <Stack>
-
-        </Stack>
+        <section className="w-full flex items-center flex-wrap flex-col relative justify-center">
+          <h3 className="text-3xl block w-full text-center">Comments</h3>
+          <span className="bg-black w-11/12 md:w-2/3 h-1 block my-6"></span>
+          <div className="w-11/12 md:w-2/3 max-w-[1260px] flex flex-wrap items-center justify-end relative">
+            <Textarea
+              className="bg-white border-2 border-solid border-black p-4 mb-6"
+              variant={"flushed"}
+              onFocus={() => setShow(true)}
+              style={{ lineHeight: 1.3 }}
+              value={commentBody}
+              onChange={(e) => setCommentBody(e.target.value)}
+              placeholder="What do you think? Add a comment for Kierstyn!"
+            ></Textarea>
+            {show && (
+              <div className="flex justify-between w-1/2 md:w-1/3 max-w-[200px] md:max-w-[300px]">
+                {!session && (
+                  <Link
+                    href={"/login"}
+                    className="absolute bottom-[30%] left-0"
+                  >
+                    Looks like your not signed in yet click here to{" "}
+                    <a className="hover:underline">Sign In</a>
+                  </Link>
+                )}
+                <Button
+                  className="mb-6 md:text-xl"
+                  onClick={() => setShow(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  className="mb-6 md:text-xl"
+                  onClick={handleAddComment}
+                >
+                  Comment
+                </Button>
+              </div>
+            )}
+          </div>
+          <Stack className="pb-20 w-11/12 md:w-2/3 flex items-center" gapY={6}>
+            {comments.map((comment, index) => (
+              <CommentCard
+                id={comment.id}
+                comment={comment}
+                key={index}
+                commentRefresh={() => setRefresh((prev) => !prev)}
+              ></CommentCard>
+            ))}
+          </Stack>
+        </section>
       </main>
     </>
   );

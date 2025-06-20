@@ -185,16 +185,74 @@ export async function deleteWritingPost(id: string) {
   }
 }
 
-export async function getComments(id: string) {
+/*
+-------------
+Comment actions
+-------------
+*/
+
+export async function addLike(username: string, id: number) {
   try {
-    const result = await sql<Comment>`SELECT * FROM comments WHERE writings_id = ${id} ORDER BY created_at DESC`;
-    return result.rows
+    await sql<Comment>`UPDATE comments SET likes = CASE WHEN NOT (${username} = ANY(likes)) THEN array_append(likes, ${username}) ELSE likes END WHERE id = ${id};`;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function removeLike(id: number, username:string) {
+      try {
+      await sql<Comment>`UPDATE comments SET likes = array_remove(likes, ${username}) WHERE id = ${id}`
+    } catch (error) {
+      console.error(error);
+    }
+}
+
+export async function getCommentsForWritings(id: number) {
+  try {
+    const result =
+      await sql<Comment>`SELECT * FROM comments WHERE writings_id = ${id} ORDER BY created_at DESC`;
+    return result.rows;
   } catch (error) {
     console.error(error);
     return [];
   }
 }
 
+export async function getCommentsForBlogs(id: number) {
+  try {
+    const result =
+      await sql<Comment>`SELECT * FROM comments WHERE blog_id = ${id} ORDER BY created_at DESC`;
+    return result.rows;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+}
+
+
+export async function addComment(writingId: number | null, blogId: number | null, username: string, body: string) {
+  try {
+    await sql<Comment>`INSERT INTO comments (writings_id, blog_id, author, body) VALUES (${writingId}, ${blogId},${username},${body})`;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function editComment(id: number, username: string, body: string) {
+  try {
+    await sql<Comment>`UPDATE comments SET body = ${body} WHERE id = ${id} AND author = ${username}`;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function deleteComment(id: number, username: string) {
+  try {
+    await sql<Comment>`DELETE FROM comments WHERE id = ${id} and author = ${username}`
+  } catch (error) {
+    console.error(error)
+  }
+}
 
 /*
 ---------------

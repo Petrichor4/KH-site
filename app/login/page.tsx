@@ -2,6 +2,7 @@
 import { Button, Field, Input, Stack } from "@chakra-ui/react";
 import { FormEvent, useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
+import { GoArrowLeft } from "react-icons/go";
 
 export default function Login() {
   const [loading, setLoading] = useState(false);
@@ -90,6 +91,7 @@ export default function Login() {
           onSubmit={handleLogin}
           className="md:h-fit md:w-1/2 w-11/12 h-fit min-w-[355px] min-h-[400px] bg-white p-4 rounded-xl flex justify-around items-center flex-col relative shadow-xl text-black"
         >
+          <GoArrowLeft className="self-start" size={40} onClick={() => window.history.back()}/>
           <Stack gap={8} className="w-full md:w-2/3">
           <h2 className="text-3xl text-center">Sign in</h2>
             <Field.Root invalid={!!alert}>

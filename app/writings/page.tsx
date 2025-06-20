@@ -133,7 +133,7 @@ export default function Writings() {
             </Button>
           ) : (
             <Link href={"/login"}>
-            <Button className="text-2xl lg:text-3xl lg:p-6" variant={"ghost"}>
+            <Button className="text-2xl lg:text-3xl lg:p-6 hover:underline" variant={"plain"}>
               Sign In
             </Button>
         </Link>

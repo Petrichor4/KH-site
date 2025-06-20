@@ -14,7 +14,7 @@
     "@emotion/react": "^11.14.0",
     "@vercel/postgres": "^0.10.0",
     "animejs": "^4.0.1",
-    "dompurify": "^3.2.4",
+    "dompurify": "^3.2.6",
     "motion": "^12.9.1",
     "next": "15.1.7",
     "next-auth": "^4.24.11",

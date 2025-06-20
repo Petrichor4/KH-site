@@ -36,7 +36,10 @@ export interface Book {
 
 export interface Comment {
   id: number;
-  type: string;
+  writings_id: string;
+  blog_id: string;
   author: string;
   body: string;
+  likes: string[];
+  created_at: string;
 }
