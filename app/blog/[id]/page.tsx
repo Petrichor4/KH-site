@@ -11,7 +11,6 @@ import {
   getCommentsForBlogs,
 } from "@/app/lib/actions";
 import Link from "next/link";
-import { HiChevronLeft } from "react-icons/hi2";
 import {
   Button,
   Fieldset,
@@ -37,6 +36,7 @@ import "react-quill-new/dist/quill.snow.css";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import CommentCard from "@/app/components/commentCard";
 import { useSession } from "next-auth/react";
+import { GoArrowLeft } from "react-icons/go";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -196,7 +196,7 @@ export default function BlogPost() {
             }}
             whileTap={{ scale: 0.9, x: 0 }}
           >
-            <HiChevronLeft className="h-5 w-auto md:h-8" />
+            <GoArrowLeft className="h-5 w-auto md:h-8" />
           </motion.button>
           <motion.h1 className="text-white text-xl md:text-3xl lg:text-4xl">
             {blog.title}
@@ -283,9 +283,15 @@ export default function BlogPost() {
             </form>
           </CustomModal>
         )}
-        <div className="flex justify-center mt-[2%] p-3">
+        <div
+          className="flex justify-center p-3 mb-16"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(31 41 55) 50%, rgba(255, 255, 255, 0) 50%)",
+          }}
+        >
           <Image
-            className="w-auto max-h-[500px] rounded-xl border-solid border-black border-2"
+            className="w-auto max-h-[500px] border-2 border-black border-solid shadow-xl"
             src={blog.photo}
             alt={`title photo for ${blog.title}`}
           />

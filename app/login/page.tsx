@@ -91,9 +91,13 @@ export default function Login() {
           onSubmit={handleLogin}
           className="md:h-fit md:w-1/2 w-11/12 h-fit min-w-[355px] min-h-[400px] bg-white p-4 rounded-xl flex justify-around items-center flex-col relative shadow-xl text-black"
         >
-          <GoArrowLeft className="self-start" size={40} onClick={() => window.history.back()}/>
-          <Stack gap={8} className="w-full md:w-2/3">
-          <h2 className="text-3xl text-center">Sign in</h2>
+          <GoArrowLeft
+            className="self-start"
+            size={40}
+            onClick={() => window.history.back()}
+          />
+          <Stack gap={8} className="w-full md:w-2/3 mb-8">
+            <h2 className="text-3xl text-center">Sign in</h2>
             <Field.Root invalid={!!alert}>
               <Field.Label fontSize={"xl"}>Username</Field.Label>
               <Input name="username" />
@@ -129,8 +133,13 @@ export default function Login() {
           onSubmit={handleRegister}
           className="md:h-fit md:w-1/2 w-11/12 h-fit min-w-[355px] min-h-[400px] bg-white p-4 rounded-xl flex justify-around items-center flex-col relative shadow-xl text-black"
         >
-          <Stack gap={8} className="w-full md:w-2/3">
-          <h2 className="text-3xl text-center">Sign Up</h2>
+          <GoArrowLeft
+            className="self-start"
+            size={40}
+            onClick={() => window.history.back()}
+          />
+          <Stack gap={8} className="w-full md:w-2/3 mb-8">
+            <h2 className="text-3xl text-center">Sign Up</h2>
             <Field.Root invalid={!!alert}>
               <Field.Label fontSize={"xl"}>Username</Field.Label>
               <Input name="username" size={"lg"} fontSize={"lg"} />
@@ -155,16 +164,16 @@ export default function Login() {
               Sign Up
             </Button>
           </Stack>
-            <p className="text-xl">
-              Have an account?{" "}
-              <button
-                onClick={() => setLogIn(true)}
-                type="button"
-                className="hover:underline hover:cursor-pointer text-black"
-              >
-                Sign in here
-              </button>
-            </p>
+          <p className="text-xl">
+            Have an account?{" "}
+            <button
+              onClick={() => setLogIn(true)}
+              type="button"
+              className="hover:underline hover:cursor-pointer text-black"
+            >
+              Sign in here
+            </button>
+          </p>
         </form>
       )}
     </main>

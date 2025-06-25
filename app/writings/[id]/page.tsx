@@ -2,7 +2,7 @@
 import { Writing, Comment } from "@/app/lib/definitions";
 import { usePathname } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
-import { Spinner, Textarea } from "@chakra-ui/react";
+import { Alert, AlertRoot, Spinner, Switch, Textarea } from "@chakra-ui/react";
 import {
   getWriting,
   deleteWritingPost,
@@ -11,7 +11,6 @@ import {
   getCommentsForWritings,
 } from "@/app/lib/actions";
 import Link from "next/link";
-import { HiChevronLeft } from "react-icons/hi2";
 import {
   Button,
   Fieldset,
@@ -34,10 +33,21 @@ import { useIsAdmin } from "@/app/components/useIsAdmin";
 import { sanitize } from "@/app/lib/sanitizeHTML";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useMotionValueEvent,
+  AnimatePresence,
+} from "framer-motion";
 import { useSession } from "next-auth/react";
+import { isValidComment } from "@/app/lib/validator";
+import { BiCommentDetail } from "react-icons/bi";
+import { VscClose } from "react-icons/vsc";
+import { GoArrowLeft } from "react-icons/go";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
+const MotionAlert = motion.create(AlertRoot);
+const MotionButton = motion.create(Button);
 
 export default function WritingsPost() {
   const modules = {
@@ -74,6 +84,7 @@ export default function WritingsPost() {
   const [writing, setWriting] = useState<Writing>();
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [checked, setChecked] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [post, setPost] = useState("");
   const { data: session } = useSession();
@@ -107,11 +118,16 @@ export default function WritingsPost() {
       const result = await getCommentsForWritings(parseInt(id));
       setComments(result);
     };
-
     fetchBlog();
     fetchComments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [refresh]);
+
+  useEffect(() => {
+    if (writing?.draft !== undefined) {
+      setChecked(writing.draft);
+    }
+  }, [writing]);
 
   const handleEditPost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -128,7 +144,8 @@ export default function WritingsPost() {
         photo.toString(),
         title.toString(),
         post,
-        writing?.id || ""
+        writing?.id || "",
+        checked ? true : false
       );
       alert("post edited sucessfully!");
       setVisible(false);
@@ -160,6 +177,8 @@ export default function WritingsPost() {
         if (!commentBody.trim()) {
           alert("You cannot post an emtpy comment");
           return;
+        } else if (!isValidComment(commentBody)) {
+          alert("Comment is invalid");
         }
         await addComment(parseInt(id), null, username, body);
       } catch (error) {
@@ -184,12 +203,12 @@ export default function WritingsPost() {
   return (
     <>
       <motion.nav
-        className={`p-4 sticky top-0 left-0 z-20 lg:h-32 bg-gray-800 flex justify-between items-center ease-in-out`}
+        className={`p-4 sticky top-0 left-0 z-20 h-20 md:h-24 lg:h-32 bg-gray-800 flex justify-center ease-in-out`}
         initial={{ y: 0 }}
-        animate={{ y: showHeader ? 0 : "-100%"}}
-        transition={{ duration: .3, ease: "easeInOut"}}
+        animate={{ y: showHeader ? 0 : "-100%" }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-        <Link href="/writings" className="active:border-none flex items-center">
+        <Link href="/writings" className="flex items-center -mr-[40px] z-10">
           <motion.button
             className="hover:cursor-pointer text-white"
             whileHover={{
@@ -203,12 +222,12 @@ export default function WritingsPost() {
             }}
             whileTap={{ scale: 0.9, x: 0 }}
           >
-            <HiChevronLeft className="h-5 w-auto md:h-8" />
+            <GoArrowLeft className="h-8 w-auto md:h-12" />
           </motion.button>
-          <motion.h1 className="text-white text-xl md:text-3xl lg:text-4xl">
-            {writing.title}
-          </motion.h1>
         </Link>
+        <motion.h1 className="text-white text-2xl md:text-3xl lg:text-5xl w-full flex justify-center items-center">
+          {writing.title}
+        </motion.h1>
         {isAdmin && (
           <Button
             className="text-2xl md:text-3xl text-white hover:underline"
@@ -220,7 +239,7 @@ export default function WritingsPost() {
           </Button>
         )}
       </motion.nav>
-      <main>
+      <main className="flex flex-wrap justify-center">
         {visible && (
           <CustomModal
             title="New Post"
@@ -256,7 +275,7 @@ export default function WritingsPost() {
               <div className="flex justify-between mt-4">
                 <PopoverRoot closeOnInteractOutside={false}>
                   <PopoverTrigger>
-                    <Button type="button" colorPalette={"red"} size={"lg"}>
+                    <Button type="button" variant={"ghost"} className="hover:bg-red-700 hover:text-white text-lg" size={"lg"}>
                       Delete Post
                     </Button>
                   </PopoverTrigger>
@@ -277,20 +296,34 @@ export default function WritingsPost() {
                     </PopoverBody>
                   </PopoverContent>
                 </PopoverRoot>
-                <Button
-                  type="submit"
-                  size={"lg"}
-                  bg={"#828698"}
-                  loading={loading}
-                >
-                  Post
-                </Button>
+                <div>
+                  <Switch.Root
+                    colorPalette={"blue"}
+                    size={"lg"}
+                    pr={4}
+                    onClick={() => setChecked((prev) => !prev)}
+                    checked={checked}
+                  >
+                    <Switch.Label className="text-lg" >Save as draft?</Switch.Label>
+                    <Switch.Control />
+                  </Switch.Root>
+
+                  <Button
+                    className="hover:bg-black hover:text-white text-lg"
+                    type="submit"
+                    variant={"ghost"}
+                    size={"lg"}
+                    loading={loading}
+                  >
+                    Post
+                  </Button>
+                </div>
               </div>
             </form>
           </CustomModal>
         )}
         <div
-          className="flex justify-center p-3 mb-16"
+          className="flex justify-center p-3 mb-16 w-full"
           style={{
             background:
               "linear-gradient(180deg, rgba(31 41 55) 50%, rgba(255, 255, 255, 0) 50%)",
@@ -304,15 +337,16 @@ export default function WritingsPost() {
         </div>
         <div
           dangerouslySetInnerHTML={{ __html: safeContent }}
-          className="p-4 lg:px-40 md:text-xl text-justify indent-5 md:indent-10 pb-32"
+          className="p-4 md:px-12 lg:px-40 md:text-xl text-justify indent-5 md:indent-10 pb-32 max-w-[2000px]"
         ></div>
         <section className="w-full flex items-center flex-wrap flex-col relative justify-center">
           <h3 className="text-3xl block w-full text-center">Comments</h3>
-          <span className="bg-black w-11/12 md:w-2/3 h-1 block my-6"></span>
+          <span className="bg-black w-11/12 md:w-2/3 h-1 block my-6 max-w-[1260px]"></span>
           <div className="w-11/12 md:w-2/3 max-w-[1260px] flex flex-wrap items-center justify-end relative">
             <Textarea
-              className="bg-white border-2 border-solid border-black p-4 mb-6"
+              className="bg-white border-2 border-solid border-black p-4 mb-6 z-10"
               variant={"flushed"}
+              autoresize
               onFocus={() => setShow(true)}
               style={{ lineHeight: 1.3 }}
               value={commentBody}
@@ -320,26 +354,57 @@ export default function WritingsPost() {
               placeholder="What do you think? Add a comment for Kierstyn!"
             ></Textarea>
             {show && (
-              <div className="flex justify-between w-1/2 md:w-1/3 max-w-[200px] md:max-w-[300px]">
+              <div
+                className={`flex flex-col lg:flex-row ${
+                  !session ? "justify-between" : "justify-end"
+                } w-full items-center`}
+              >
                 {!session && (
-                  <Link href={"/login"} className="absolute bottom-[30%] left-0">
-                    Looks like your not signed in yet click here to{" "}
-                    <a className="hover:underline">Sign In</a>
-                  </Link>
+                  <AnimatePresence>
+                    <MotionAlert
+                      initial={{ opacity: 0, y: -60 }}
+                      animate={{ opacity: 1, y: 0, transition: { delay: 0.3 } }}
+                      variant={"surface"}
+                      className="mb-6 flex items-center text-lg lg:text-xl lg:w-1/2 "
+                    >
+                      <Alert.Indicator />
+                      <Alert.Title className="font-bold">
+                        Account Required
+                      </Alert.Title>
+                      <Alert.Description>
+                        <Link href={"/login"} className="underline">
+                          Sign In
+                        </Link>{" "}
+                        to comment
+                      </Alert.Description>
+                    </MotionAlert>
+                  </AnimatePresence>
                 )}
-                <Button
-                  className="mb-6 md:text-xl"
-                  onClick={() => setShow(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  className="mb-6 md:text-xl"
-                  onClick={handleAddComment}
-                >
-                  Comment
-                </Button>
+                <AnimatePresence>
+                  <motion.div
+                    className="flex gap-2 max-lg:self-end self-start"
+                    initial={{ y: -80 }}
+                    animate={{ y: 0 }}
+                  >
+                    <MotionButton
+                      className="mb-6 text-xl"
+                      onClick={() => setShow(false)}
+                      variant={"plain"}
+                    >
+                      Cancel
+                      <VscClose />
+                    </MotionButton>
+                    <MotionButton
+                      type="submit"
+                      className="mb-6 text-xl"
+                      onClick={handleAddComment}
+                      variant={"plain"}
+                    >
+                      Comment
+                      <BiCommentDetail />
+                    </MotionButton>
+                  </motion.div>
+                </AnimatePresence>
               </div>
             )}
           </div>

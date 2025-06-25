@@ -1,4 +1,4 @@
-import { Flex, IconButton, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 import { HiOutlineX } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -30,30 +30,19 @@ const CustomModal: React.FC<ModalProps> = ({
       zIndex="1000"
     >
       <AnimatePresence>
-        <motion.div
-          className="p-4 rounded-md shadow-lg bg-white max-h-[75%] text-black overflow-auto w-11/12 md:w-9/12 lg:w-2/5"
-          initial={{ scale: 0 }}
-          transition={{ duration: 0.5 }}
-          animate={{ scale: 1 }}
-          exit={{ scale: 0 }}
-        >
+        <motion.div className="p-4 shadow-lg bg-white max-h-[75%] max-w-[1150px] w-11/12 md:w-9/12 lg:w-1/2 text-black overflow-auto border-black border-solid border-4">
           <Flex justifyContent="space-between" alignItems="center" mb="4">
             <Text fontSize="4xl" fontWeight="bold">
               {title}
             </Text>
-            <IconButton
-              size="sm"
-              bg={"#828698"}
-              _hover={{ bg: "#828698", opacity: "50%" }}
-              rounded={"full"}
+            <HiOutlineX
+              className="hover:bg-gray-300 active:bg-gray-500 h-10 w-10 p-1 rounded-full hover:cursor-pointer duration-200"
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault(); // this will also stop the <Link> from navigating
                 onClose();
               }}
-            >
-              <HiOutlineX />
-            </IconButton>
+            />
           </Flex>
           {children}
         </motion.div>

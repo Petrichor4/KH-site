@@ -63,7 +63,7 @@ export default function Nav() {
 
 
   return (
-    <nav className="lg:w-full lg:flex justify-center">
+    <nav className="lg:w-full flex justify-end pr-5 pt-5 lg:p-0 lg:justify-center">
         <div className="lg:flex flex-row w-2/5 max-w-[665px] justify-between items-center text-2xl xl:text-4xl hidden h-40">
           <Link className="hover:underline relative inline-block" href={"/blog"} >
             <h2 className="z-10">Blog</h2>
@@ -127,7 +127,7 @@ export default function Nav() {
         <DrawerRoot size={"lg"}>
           <DrawerBackdrop />
           <DrawerTrigger>
-            <VscMenu className="nav-button absolute top-4 right-4 lg:hidden" size={30} />
+            <VscMenu className="nav-button lg:hidden m-[5px]" size={30} />
           </DrawerTrigger>
           <DrawerContent bg={"white"}>
             <DrawerCloseTrigger onClick={() => setVisible(false)} />

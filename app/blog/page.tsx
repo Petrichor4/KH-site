@@ -1,5 +1,5 @@
 "use client";
-import { HiChevronLeft, HiMiniPencilSquare } from "react-icons/hi2";
+import { HiMiniPencilSquare } from "react-icons/hi2";
 import Link from "next/link";
 import { useState, useEffect, FormEvent } from "react";
 import {
@@ -20,9 +20,19 @@ import CustomModal from "../components/customModal";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 import { useIsAdmin } from "../components/useIsAdmin";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
+import Nav from "../components/nav";
+import { Monsieur_La_Doulaise } from "next/font/google";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
+
+const monsieurLaDoulaise = Monsieur_La_Doulaise({
+  weight: "400",
+  preload: true,
+  subsets: ["latin"],
+  style: "normal",
+  display: "swap",
+});
 
 export default function BlogPage() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -31,13 +41,6 @@ export default function BlogPage() {
   const { isAdmin } = useIsAdmin();
   const [post, setPost] = useState("");
   const [loading, setLoading] = useState(false);
-  const { scrollY } = useScroll();
-
-  // animations for the header
-  const headerTitleOpacity = useTransform(scrollY, [0, 50], ["0", "1"]);
-  // const headerPadding = useTransform(scrollY, [0, 50], ["16px", "4px"]);
-
-  // console.log(isAdmin);
 
   const modules = {
     toolbar: [
@@ -104,51 +107,48 @@ export default function BlogPage() {
   };
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, transition: { duration: 0.3 } }}
+      animate={{ opacity: 1 }}
+    >
       <motion.nav
-        className="p-4 sticky top-0 left-0 z-20 bg-inherit flex justify-between items-center"
+        className="top-0 left-0 z-20 bg-inherit flex flex-wrap justify-between items-center bg-grey-800"
         // style={{ padding: headerPadding }}
       >
-        <Link href="/" className="active:border-none flex items-center">
-          <motion.button
-            className="hover:cursor-pointer"
-            whileHover={{
-              x: 10,
-              transition: {
-                duration: 0.8,
-                repeat: Infinity,
-                repeatType: "mirror",
-                ease: "easeInOut",
-              },
-            }}
-            whileTap={{ scale: 0.9, x: 0 }}
+        <Link
+          href="/"
+          className="active:border-none flex items-center -mr-[40px] z-10"
+        >
+          <button
+            onClick={() => window.location.assign("/")}
+            className={`${monsieurLaDoulaise.className} antialiased absolute top-[3%] left-[3%] lg:p-3 text-3xl sm:text-xl lg:text-6xl text-black hover:cursor-pointer hover:scale-[1.05] duration-200`}
           >
-            <HiChevronLeft size={40} />
-          </motion.button>
-          <motion.h1
-            className="text-white text-3xl lg:text-6xl"
-            style={{ opacity: headerTitleOpacity }}
-          >
-            Blog
-          </motion.h1>
+            K
+          </button>
         </Link>
+        <Nav></Nav>
         {session ? (
           <Button
-            className="text-2xl lg:text-3xl lg:p-6"
-            variant={"ghost"}
+            className="text-2xl lg:text-3xl lg:p-6 absolute top-[3%] right-[3%] hover:underline hidden lg:inline-flex"
+            variant={"plain"}
             onClick={() => signOut()}
           >
             Sign Out
           </Button>
         ) : (
           <Link href={"/login"}>
-            <Button className="text-2xl lg:text-3xl lg:p-6" variant={"ghost"}>
+            <Button
+              className="text-2xl lg:text-3xl lg:p-6 hover:underline absolute top-[3%] right-[3%] hidden lg:inline-flex"
+              variant={"plain"}
+            >
               Sign In
             </Button>
           </Link>
         )}
+        <h1 className="scroll-p-3.5 py-5 lg:py-20 text-3xl lg:text-8xl w-full text-center">
+          Blog
+        </h1>
       </motion.nav>
-      <h1 className="p-4 pt-0 scroll-p-3.5 text-3xl lg:text-6xl">Blog</h1>
       <main>
         {isAdmin && (
           <IconButton
@@ -219,11 +219,16 @@ export default function BlogPage() {
         >
           <Masonry className="p-[10px] pt-0">
             {blogs.map((blog, index) => (
-              <CustomCard key={index} post={blog} type="blog" />
+              <CustomCard
+                isDraft={blog.draft}
+                key={index}
+                post={blog}
+                type="blog"
+              />
             ))}
           </Masonry>
         </ResponsiveMasonry>
       </main>
-    </>
+    </motion.div>
   );
 }

@@ -1,7 +1,7 @@
 "use server";
 
 import { sql } from "@vercel/postgres";
-import { Blog, Book, HeaderData, User, Writing, Comment } from "./definitions";
+import { Blog, Book, HeaderData, User, Writing, Comment, Reply } from "./definitions";
 import bcrypt from "bcrypt";
 
 export async function getHeaderData(): Promise<HeaderData[]> {
@@ -155,10 +155,11 @@ export async function getWriting(id: string) {
 export async function addWritingPost(
   photo: string,
   title: string,
-  content: string
+  content: string,
+  draft: boolean
 ) {
   try {
-    await sql`INSERT INTO writings (photo, title, content) VALUES (${photo}, ${title}, ${content})`;
+    await sql`INSERT INTO writings (photo, title, content, draft) VALUES (${photo}, ${title}, ${content}, ${draft})`;
   } catch (error) {
     console.log(error);
   }
@@ -168,10 +169,11 @@ export async function editWritingPost(
   photo: string,
   title: string,
   content: string,
-  id: string
+  id: string,
+  draft: boolean
 ) {
   try {
-    await sql`UPDATE writings SET photo =${photo}, title = ${title}, content = ${content} WHERE id = ${id}`;
+    await sql`UPDATE writings SET photo =${photo}, title = ${title}, content = ${content}, draft = ${draft} WHERE id = ${id}`;
   } catch (error) {
     console.log(error);
   }
@@ -251,6 +253,24 @@ export async function deleteComment(id: number, username: string) {
     await sql<Comment>`DELETE FROM comments WHERE id = ${id} and author = ${username}`
   } catch (error) {
     console.error(error)
+  }
+}
+
+export async function replyComment(id: number, username: string, body: string) {
+  try {
+    await sql`INSERT INTO replies (comment_id, author, body) values(${id}, ${username}, ${body});`
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function getReplies(id: number,) {
+  try {
+    const result = await sql<Reply>`SELECT * FROM replies WHERE comment_id = ${id}`
+    return result.rows
+  } catch (error) {
+    console.error(error)
+    return []
   }
 }
 

@@ -114,7 +114,7 @@ export default function Home() {
         className="w-full flex flex-wrap justify-center h-[500px] md:h-[900px] lg:h-[81vh]"
       >
         <motion.h1
-          className={`${monsieurLaDoulaise.className} text-5xl sm:text-6xl md:text-7xl lg:text-9xl xl:text-[160px] p-12 py-20 pl-6`}
+          className={`${monsieurLaDoulaise.className} text-5xl sm:text-6xl md:text-7xl lg:text-9xl xl:text-[160px] w-full text-center pt-10 pb-20`}
           initial={{ y: 80, opacity: 0 }}
           animate={{
             y: 0,
@@ -188,7 +188,7 @@ export default function Home() {
             desc={headerData[0].about_me}
           ></InfoCard>
         </div>
-        <h2 className="flex justify-center items-center text-3xl md:text-4xl lg:text-5xl h-20 md:h-36 lg:h-60">
+        <h2 className="flex justify-center items-center text-3xl md:text-4xl lg:text-5xl h-36 lg:h-60">
           Books
         </h2>
         <div className=" w-full flex justify-center mb-16 lg:mb-40">

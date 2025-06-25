@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { HiChevronLeft, HiMiniPencilSquare } from "react-icons/hi2";
+import { HiMiniPencilSquare } from "react-icons/hi2";
 import { signOut, useSession } from "next-auth/react";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import {
@@ -11,7 +11,10 @@ import {
   Field,
   FieldLabel,
   Input,
+  Switch,
+  // Icon,
 } from "@chakra-ui/react";
+// import { FaCheck, FaTimes } from "react-icons/fa";
 import CustomCard from "../components/customCard";
 import CustomModal from "../components/customModal";
 import { Writing } from "../lib/definitions";
@@ -20,8 +23,18 @@ import { getWritings, addWritingPost } from "../lib/actions";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
 import { useIsAdmin } from "../components/useIsAdmin";
-import { motion, useScroll, useTransform } from "framer-motion"
+import { motion } from "framer-motion";
+import Nav from "../components/nav";
+import { Monsieur_La_Doulaise } from "next/font/google";
+import { LoginModal } from "../components/loginModal";
 
+const monsieurLaDoulaise = Monsieur_La_Doulaise({
+  weight: "400",
+  preload: true,
+  subsets: ["latin"],
+  style: "normal",
+  display: "swap",
+});
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -58,24 +71,29 @@ export default function Writings() {
   ];
 
   const [writings, setWritings] = useState<Writing[]>([]);
+  const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [login, setLogin] = useState(false);
   const [post, setPost] = useState("");
   const { data: session } = useSession();
   const [visibile, setVisible] = useState(false);
   const { isAdmin } = useIsAdmin();
-  const {scrollY} = useScroll();
-
   //animation variables for header animation
-  const headerTitleOpacity = useTransform(scrollY, [0,50], ["0","1"])
+  // const headerTitleOpacity = useTransform(scrollY, [0, 50], ["0", "1"]);
   // const headerPadding = useTransform(scrollY, [0,50], ["16px","8px"])
 
   useEffect(() => {
     const fetchWritings = async () => {
       const result = await getWritings();
+      if (!isAdmin) {
+        const filteredResult = result.filter((result) => result.draft !== true);
+        setWritings(filteredResult);
+        return;
+      }
       setWritings(result);
     };
     fetchWritings();
-  }, []);
+  }, [isAdmin]);
 
   const handlePost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -86,60 +104,70 @@ export default function Writings() {
     try {
       if (!photo || !title) {
         alert("Please fill everything out Kierstyn!❤️");
+        setLoading(false);
         return;
       }
-      await addWritingPost(photo.toString(), title.toString(), post);
+      await addWritingPost(
+        photo.toString(),
+        title.toString(),
+        post,
+        checked ? true : false
+      );
+      setLoading(false);
+      setVisible(false);
+      alert("post added sucessfully!");
     } catch (error) {
       alert(`Error adding post: ${error}`);
       setLoading(false);
       console.error(error);
-    } finally {
-      setLoading(false);
-      setVisible(false);
-      alert("post added sucessfully!");
     }
   };
 
   return (
-    <>
+    <motion.div
+      initial={{ opacity: 0, transition: { duration: 0.3 } }}
+      animate={{ opacity: 1 }}
+    >
+      {login && <LoginModal onClose={() => setLogin(false) }></LoginModal>}
       <motion.nav
-        className="p-4 sticky top-0 left-0 z-20 bg-inherit flex justify-between items-center"
+        className="top-0 left-0 z-20 bg-inherit flex flex-wrap justify-between items-center bg-grey-800"
         // style={{ padding: headerPadding }}
       >
-        <Link href="/" className="active:border-none flex items-center">
-          <motion.button className="hover:cursor-pointer"
-            whileHover={{
-              x: 10,
-              transition: { duration: .8, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" },
-            }}
-            whileTap={{ scale: 0.9, x: 0 }}
+        <Link
+          href="/"
+          className="active:border-none flex items-center -mr-[40px] z-10"
+        >
+          <button
+            onClick={() => window.location.assign("/")}
+            className={`${monsieurLaDoulaise.className} antialiased absolute top-[3%] left-[3%] lg:p-3 text-3xl sm:text-xl lg:text-6xl text-black hover:cursor-pointer hover:scale-[1.05] duration-200`}
           >
-            <HiChevronLeft size={40} />
-          </motion.button>
-          <motion.h1
-            className="text-white text-3xl lg:text-6xl"
-            style={{ opacity: headerTitleOpacity }}
-          >
-            Writings
-          </motion.h1>
+            K
+          </button>
         </Link>
-          {session ? (
+        <Nav></Nav>
+        {session ? (
+          <Button
+            className="text-2xl lg:text-3xl lg:p-6 absolute top-[3%] right-[3%] hover:underline hidden lg:inline-flex"
+            variant={"plain"}
+            onClick={() => signOut()}
+          >
+            Sign Out
+          </Button>
+        ) : (
+          <div>
             <Button
-              className="text-2xl lg:text-3xl lg:p-6"
-              variant={"ghost"}
-              onClick={() => signOut()}
+              className="text-2xl lg:text-3xl lg:p-6 hover:underline absolute top-[3%] right-[3%] hidden lg:inline-flex"
+              variant={"plain"}
+              onClick={() => setLogin(true)}
             >
-              Sign Out
-            </Button>
-          ) : (
-            <Link href={"/login"}>
-            <Button className="text-2xl lg:text-3xl lg:p-6 hover:underline" variant={"plain"}>
               Sign In
             </Button>
-        </Link>
-          )}
+          </div>
+        )}
+        <h1 className="scroll-p-3.5 py-5 lg:py-20 text-3xl lg:text-8xl w-full text-center">
+          Writings
+        </h1>
       </motion.nav>
-      <h1 className="p-4 pt-0 scroll-p-3.5 text-3xl lg:text-6xl">Writings</h1>
       <main>
         {isAdmin && (
           <IconButton
@@ -185,10 +213,22 @@ export default function Writings() {
                   </Field.Root>
                 </Stack>
               </Fieldset.Root>
-              <div className="flex justify-end mt-4">
+              <div className="flex justify-end mt-4 gap-2">
+                <Switch.Root
+                  colorPalette={"blue"}
+                  size={"lg"}
+                  onClick={() => setChecked((prev) => !prev)}
+                  checked={checked}
+                >
+                  <Switch.Label className="text-lg">
+                    Save as draft?
+                  </Switch.Label>
+                  <Switch.Control />
+                </Switch.Root>
                 <Button
                   type="submit"
-                  bg={"#828698"}
+                  className="hover:bg-black hover:text-white text-lg"
+                  variant={"ghost"}
                   size={"lg"}
                   loading={loading}
                 >
@@ -210,11 +250,16 @@ export default function Writings() {
         >
           <Masonry className="p-[10px] pt-0">
             {writings.map((writing, index) => (
-              <CustomCard key={index} post={writing} type="writings" />
+              <CustomCard
+                isDraft={writing.draft}
+                key={index}
+                post={writing}
+                type="writings"
+              />
             ))}
           </Masonry>
         </ResponsiveMasonry>
       </main>
-    </>
+    </motion.div>
   );
 }

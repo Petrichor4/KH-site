@@ -2,9 +2,9 @@
 
 import { Button, Stack, Input, Textarea } from "@chakra-ui/react";
 import Link from "next/link";
-import { HiChevronLeft } from "react-icons/hi2";
 import { CiLocationOn, CiMail, CiInstagram } from "react-icons/ci";
 import { motion } from "framer-motion"
+import { GoArrowLeft } from "react-icons/go";
 
 //   import { useState } from "react";
 
@@ -26,7 +26,7 @@ export default function ContactPage() {
             }}
             whileTap={{ scale: 0.9, x: 0 }}
           >
-            <HiChevronLeft size={40} />
+            <GoArrowLeft size={40} />
           </motion.button>
         </Link>
         <div className="w-5/6 md:w-1/2">

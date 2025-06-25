@@ -7,9 +7,11 @@ import { motion } from "framer-motion";
 export default function CustomCard({
   type,
   post,
+  isDraft
 }: {
   post: Blog | Writing;
   type: string;
+  isDraft: boolean;
 }) {
   const [visilbility, setVisibility] = useState(false);
 
@@ -23,7 +25,7 @@ export default function CustomCard({
           },
         }}
         onHoverEnd={() => setVisibility(false)}
-        className="relative flex h-full w-full border-solid border-black border-2 rounded-[10px]"
+        className={`relative flex h-full w-full border-solid ${isDraft ? "border-red-600 border-8 rounded-[16px]" : "border-black border-2"} rounded-[10px]`}
         onMouseEnter={() => setVisibility(true)}
         onTap={() => setVisibility(true)}
         onBlur={() => setVisibility(false)}
@@ -46,7 +48,7 @@ export default function CustomCard({
               className={`rounded-lg z-10 bg-black opacity-70 absolute w-full h-full inset-0`}
             >
               <h2 className="text-white hover:underline p-1 pl-2 h-fit w-fit cursor-pointer">
-                {post.title}
+                {`${post.title} ${isDraft ? "(Draft)" : ""}`}
               </h2>
             </motion.div>
           </Link>
