@@ -230,7 +230,7 @@ export default function CommentCard({
         <MotionBox className="ml-8 mt-6 w-full">
           <Stack gapY={8}>
             {replies.map((reply) => (
-              <ReplyCard key={reply.id} reply={reply}></ReplyCard>
+              <ReplyCard commentRefresh={commentRefresh} key={reply.id} reply={reply}></ReplyCard>
             ))}
             {reply && (
               <AnimatePresence>

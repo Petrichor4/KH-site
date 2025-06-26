@@ -73,14 +73,15 @@ export default function Writings() {
 
   const masonSkeleton = [
     { height: "300px", width: "full" },
-    { height: "200px", width: "full" },
-    { height: "280px", width: "full" },
+    { height: "420px", width: "full" },
     { height: "320px", width: "full" },
+    { height: "380px", width: "full" },
+    { height: "480px", width: "full" },
+
+    { height: "500px", width: "full" },
+    { height: "380px", width: "full" },
     { height: "400px", width: "full" },
-    { height: "200px", width: "full" },
-    { height: "300px", width: "full" },
-    { height: "400px", width: "full" },
-    { height: "280px", width: "full" },
+    { height: "320px", width: "full" },
     { height: "320px", width: "full" },
   ];
 
@@ -268,6 +269,7 @@ export default function Writings() {
                 <Skeleton
                   height={skeleton.height}
                   width={skeleton.width}
+                  borderRadius={"10px"}
                   key={index}
                   variant={"shine"}
                 ></Skeleton>

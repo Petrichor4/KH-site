@@ -10,6 +10,7 @@ import {
   Field,
   FieldLabel,
   Input,
+  Skeleton,
 } from "@chakra-ui/react";
 import CustomCard from "../components/customCard";
 import { Blog } from "../lib/definitions";
@@ -23,6 +24,7 @@ import { useIsAdmin } from "../components/useIsAdmin";
 import { motion } from "framer-motion";
 import Nav from "../components/nav";
 import { Monsieur_La_Doulaise } from "next/font/google";
+import { LoginModal } from "../components/loginModal";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -34,8 +36,23 @@ const monsieurLaDoulaise = Monsieur_La_Doulaise({
   display: "swap",
 });
 
+const masonSkeleton = [
+  { height: "300px", width: "full" },
+  { height: "420px", width: "full" },
+  { height: "320px", width: "full" },
+  { height: "380px", width: "full" },
+  { height: "480px", width: "full" },
+
+  { height: "500px", width: "full" },
+  { height: "380px", width: "full" },
+  { height: "400px", width: "full" },
+  { height: "320px", width: "full" },
+  { height: "320px", width: "full" },
+];
+
 export default function BlogPage() {
   const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [login, setLogin] = useState(false);
   const [visibile, setVisible] = useState(false);
   const { data: session } = useSession();
   const { isAdmin } = useIsAdmin();
@@ -111,6 +128,7 @@ export default function BlogPage() {
       initial={{ opacity: 0, transition: { duration: 0.3 } }}
       animate={{ opacity: 1 }}
     >
+      {login && <LoginModal onClose={() => setLogin(false)}></LoginModal>}
       <motion.nav
         className="top-0 left-0 z-20 bg-inherit flex flex-wrap justify-between items-center bg-grey-800"
         // style={{ padding: headerPadding }}
@@ -136,14 +154,15 @@ export default function BlogPage() {
             Sign Out
           </Button>
         ) : (
-          <Link href={"/login"}>
+          <div>
             <Button
               className="text-2xl lg:text-3xl lg:p-6 hover:underline absolute top-[3%] right-[3%] hidden lg:inline-flex"
               variant={"plain"}
+              onClick={() => setLogin(true)}
             >
               Sign In
             </Button>
-          </Link>
+          </div>
         )}
         <h1 className="scroll-p-3.5 py-5 lg:py-20 text-3xl lg:text-8xl w-full text-center">
           Blog
@@ -218,6 +237,17 @@ export default function BlogPage() {
           }}
         >
           <Masonry className="p-[10px] pt-0">
+            {blogs.length === 0 &&
+              masonSkeleton.map((skeleton, index) => (
+                <Skeleton
+                  height={skeleton.height}
+                  width={skeleton.width}
+                  borderRadius={"10px"}
+                  key={index}
+                  variant={"shine"}
+                ></Skeleton>
+              ))}
+
             {blogs.map((blog, index) => (
               <CustomCard
                 isDraft={blog.draft}

@@ -373,12 +373,16 @@ export default function WritingsPost() {
               value={commentBody}
               onChange={(e) => setCommentBody(e.target.value)}
               placeholder="What do you think? Add a comment for Kierstyn!"
+              onKeyDown={(e) => {
+                      if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        handleAddComment();
+                      }
+                    }}
             ></Textarea>
             {show && (
               <div
-                className={`flex flex-col lg:flex-row ${
-                  !session ? "justify-between" : "justify-end"
-                } w-full items-center`}
+                className={`flex flex-col lg:flex-row justify-end w-full items-center`}
               >
                 <AnimatePresence>
                   <motion.div

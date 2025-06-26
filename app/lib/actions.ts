@@ -274,6 +274,22 @@ export async function getReplies(id: number,) {
   }
 }
 
+export async function editReply(id: number, author: string, body: string) {
+  try {
+    await sql<Reply>`UPDATE replies SET body = ${body} WHERE author = ${author} and id = ${id}`
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+export async function deleteReply(id: number, author: string) {
+  try{
+    await sql<Reply>`DELETE FROM replies WHERE id = ${id} AND author = ${author}`
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 /*
 ---------------
 Book actions
