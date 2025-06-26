@@ -1,8 +1,8 @@
 import { Stack, Field, Button, Input } from "@chakra-ui/react";
-import { GoArrowLeft } from "react-icons/go";
 import CustomModal from "./customModal";
 import { signIn } from "next-auth/react";
 import { useState, useEffect, FormEvent } from "react";
+import { PasswordInput } from "@/components/ui/password-input";
 
 export function LoginModal({onClose}:{onClose: () => void}) {
   const [loading, setLoading] = useState(false);
@@ -76,11 +76,11 @@ export function LoginModal({onClose}:{onClose: () => void}) {
         return;
       }
       console.log(response);
-      window.history.back();
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
+      onClose();
     }
   };
 
@@ -90,7 +90,7 @@ export function LoginModal({onClose}:{onClose: () => void}) {
         {logIn ? (
           <form
             onSubmit={handleLogin}
-            className="w-full h-fit min-w-[355px] min-h-[400px] bg-white p-4 rounded-xl flex justify-around items-center flex-col relative text-black"
+            className="w-full h-fit sm:min-w-[355px] sm:min-h-[400px] bg-white p-4 rounded-xl flex justify-around items-center flex-col relative text-black"
           >
             <Stack gap={8} className="w-full md:w-2/3 mb-8">
               <h2 className="text-3xl text-center">Sign in</h2>
@@ -101,7 +101,7 @@ export function LoginModal({onClose}:{onClose: () => void}) {
               </Field.Root>
               <Field.Root invalid={!!alert}>
                 <Field.Label fontSize={"xl"}>Password</Field.Label>
-                <Input name="password" />
+                <PasswordInput name="password" />
                 <Field.ErrorText>{alert}</Field.ErrorText>
               </Field.Root>
               <Button
@@ -127,7 +127,7 @@ export function LoginModal({onClose}:{onClose: () => void}) {
         ) : (
           <form
             onSubmit={handleRegister}
-            className=" w-full h-fit min-w-[355px] min-h-[400px] bg-white p-4 rounded-xl flex justify-around items-center flex-col relative text-black"
+            className="w-full h-fit sm:min-w-[355px] sm:min-h-[400px] bg-white p-4 rounded-xl flex justify-around items-center flex-col relative text-black"
           >
             <Stack gap={8} className="w-full md:w-2/3 mb-8">
               <h2 className="text-3xl text-center">Sign Up</h2>

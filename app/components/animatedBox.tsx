@@ -23,6 +23,7 @@ export function AnimatedBox({
   hideReplies,
   setReply,
   replyShown,
+  setLogin
 }: {
   author: string;
   admin: boolean | null;
@@ -33,6 +34,7 @@ export function AnimatedBox({
   hideReplies: () => void;
   setReply: () => void;
   replyShown: boolean;
+  setLogin: () => void;
 }) {
   const [show, setShow] = useState(false);
   const { data: session } = useSession();
@@ -52,7 +54,7 @@ export function AnimatedBox({
         variant="plain"
         className="hover:underline active:bg-gray-300 rounded-full duration-100 text-base"
         style={{ paddingInline: "8px" }}
-        onClick={setReply}
+        onClick={() => {setReply(); if (!session) setLogin()}}
       >
         <LiaReplySolid />
         Reply

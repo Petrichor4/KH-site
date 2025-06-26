@@ -2,7 +2,7 @@
 import { Writing, Comment } from "@/app/lib/definitions";
 import { usePathname } from "next/navigation";
 import { FormEvent, useEffect, useState } from "react";
-import { Alert, AlertRoot, Spinner, Switch, Textarea } from "@chakra-ui/react";
+import { SkeletonCircle, SkeletonText, Spinner, Switch, Textarea } from "@chakra-ui/react";
 import {
   getWriting,
   deleteWritingPost,
@@ -44,9 +44,9 @@ import { isValidComment } from "@/app/lib/validator";
 import { BiCommentDetail } from "react-icons/bi";
 import { VscClose } from "react-icons/vsc";
 import { GoArrowLeft } from "react-icons/go";
+import { LoginModal } from "@/app/components/loginModal";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
-const MotionAlert = motion.create(AlertRoot);
 const MotionButton = motion.create(Button);
 
 export default function WritingsPost() {
@@ -86,6 +86,8 @@ export default function WritingsPost() {
   const [visible, setVisible] = useState(false);
   const [checked, setChecked] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  const [login, setLogin] = useState(false);
+  // const [verifySignedIn, setVerifySignedIn] = useState(false);
   const [post, setPost] = useState("");
   const { data: session } = useSession();
   const [comments, setComments] = useState<Comment[]>([]);
@@ -128,6 +130,12 @@ export default function WritingsPost() {
       setChecked(writing.draft);
     }
   }, [writing]);
+
+  // useEffect(() => {
+  //   if (status === "loading") return;
+  //   if (!session) setLogin((prev) => !prev);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [verifySignedIn, status]);
 
   const handleEditPost = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -181,6 +189,7 @@ export default function WritingsPost() {
           alert("Comment is invalid");
         }
         await addComment(parseInt(id), null, username, body);
+        setLoading(true);
       } catch (error) {
         console.error(error);
         alert(`There was a problem posting your comment: ${error}`);
@@ -188,6 +197,7 @@ export default function WritingsPost() {
         setRefresh((prev) => !prev);
         setShow(false);
         setCommentBody("");
+        setLoading(false);
       }
     }
   };
@@ -240,6 +250,7 @@ export default function WritingsPost() {
         )}
       </motion.nav>
       <main className="flex flex-wrap justify-center">
+        {login && <LoginModal onClose={() => setLogin(false)}></LoginModal>}
         {visible && (
           <CustomModal
             title="New Post"
@@ -275,7 +286,12 @@ export default function WritingsPost() {
               <div className="flex justify-between mt-4">
                 <PopoverRoot closeOnInteractOutside={false}>
                   <PopoverTrigger>
-                    <Button type="button" variant={"ghost"} className="hover:bg-red-700 hover:text-white text-lg" size={"lg"}>
+                    <Button
+                      type="button"
+                      variant={"ghost"}
+                      className="hover:bg-red-700 hover:text-white text-lg"
+                      size={"lg"}
+                    >
                       Delete Post
                     </Button>
                   </PopoverTrigger>
@@ -304,7 +320,9 @@ export default function WritingsPost() {
                     onClick={() => setChecked((prev) => !prev)}
                     checked={checked}
                   >
-                    <Switch.Label className="text-lg" >Save as draft?</Switch.Label>
+                    <Switch.Label className="text-lg">
+                      Save as draft?
+                    </Switch.Label>
                     <Switch.Control />
                   </Switch.Root>
 
@@ -347,7 +365,10 @@ export default function WritingsPost() {
               className="bg-white border-2 border-solid border-black p-4 mb-6 z-10"
               variant={"flushed"}
               autoresize
-              onFocus={() => setShow(true)}
+              onFocus={() => {
+                setShow(true);
+                if (!session) setLogin((prev) => !prev);
+              }}
               style={{ lineHeight: 1.3 }}
               value={commentBody}
               onChange={(e) => setCommentBody(e.target.value)}
@@ -359,27 +380,6 @@ export default function WritingsPost() {
                   !session ? "justify-between" : "justify-end"
                 } w-full items-center`}
               >
-                {!session && (
-                  <AnimatePresence>
-                    <MotionAlert
-                      initial={{ opacity: 0, y: -60 }}
-                      animate={{ opacity: 1, y: 0, transition: { delay: 0.3 } }}
-                      variant={"surface"}
-                      className="mb-6 flex items-center text-lg lg:text-xl lg:w-1/2 "
-                    >
-                      <Alert.Indicator />
-                      <Alert.Title className="font-bold">
-                        Account Required
-                      </Alert.Title>
-                      <Alert.Description>
-                        <Link href={"/login"} className="underline">
-                          Sign In
-                        </Link>{" "}
-                        to comment
-                      </Alert.Description>
-                    </MotionAlert>
-                  </AnimatePresence>
-                )}
                 <AnimatePresence>
                   <motion.div
                     className="flex gap-2 max-lg:self-end self-start"
@@ -409,11 +409,25 @@ export default function WritingsPost() {
             )}
           </div>
           <Stack className="pb-20 w-11/12 md:w-2/3 flex items-center" gapY={6}>
-            {comments.map((comment, index) => (
+            {loading && (
+              <div className="border-black border-2 border-solid bg-[#ffffff] p-4 pr- flex flex-wrap relative max-w-[1260px] w-full justify-start items-center">
+                <div className="w-1/4 flex flex-nowrap gap-4 items-center">
+                  <SkeletonCircle size={12}/>
+                  <div className="w-32">
+                    <SkeletonText noOfLines={1} />
+                  </div>
+                </div>
+                <div className="pr-8 pt-4 w-full">
+                  <SkeletonText noOfLines={3} />
+                </div>
+              </div>
+            )}
+            {comments.map((comment) => (
               <CommentCard
                 id={comment.id}
                 comment={comment}
-                key={index}
+                key={comment.id}
+                setLogin={() => setLogin((prev) => !prev)}
                 commentRefresh={() => setRefresh((prev) => !prev)}
               ></CommentCard>
             ))}

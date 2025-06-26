@@ -32,7 +32,7 @@ const monsieurLaDoulaise = Monsieur_La_Doulaise({
 
 export default function Home() {
 
-  const MotionBox = motion(Box);
+  const MotionBox = motion.create(Box);
   const [triggerRefresh, setTriggerRefresh] = useState(false);
   const { isAdmin } = useIsAdmin();
   const [headerData, setHeaderData] = useState<HeaderData[]>([]);
@@ -199,7 +199,7 @@ export default function Home() {
               scrollSnapType: "x mandatory",
               WebkitOverflowScrolling: "touch",
             }}
-            className="carousel flex items-center w-11/12 justify-between"
+            className="carousel flex items-center w-11/12 max-w-[1200px] justify-between"
           >
             {books.map((book, index) => (
               <MotionBox

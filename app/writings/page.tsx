@@ -12,6 +12,7 @@ import {
   FieldLabel,
   Input,
   Switch,
+  Skeleton,
   // Icon,
 } from "@chakra-ui/react";
 // import { FaCheck, FaTimes } from "react-icons/fa";
@@ -68,6 +69,19 @@ export default function Writings() {
     "indent",
     "link",
     "image",
+  ];
+
+  const masonSkeleton = [
+    { height: "300px", width: "full" },
+    { height: "200px", width: "full" },
+    { height: "280px", width: "full" },
+    { height: "320px", width: "full" },
+    { height: "400px", width: "full" },
+    { height: "200px", width: "full" },
+    { height: "300px", width: "full" },
+    { height: "400px", width: "full" },
+    { height: "280px", width: "full" },
+    { height: "320px", width: "full" },
   ];
 
   const [writings, setWritings] = useState<Writing[]>([]);
@@ -128,9 +142,9 @@ export default function Writings() {
       initial={{ opacity: 0, transition: { duration: 0.3 } }}
       animate={{ opacity: 1 }}
     >
-      {login && <LoginModal onClose={() => setLogin(false) }></LoginModal>}
+      {login && <LoginModal onClose={() => setLogin(false)}></LoginModal>}
       <motion.nav
-        className="top-0 left-0 z-20 bg-inherit flex flex-wrap justify-between items-center bg-grey-800"
+        className="top-0 left-0 z-20 flex flex-wrap justify-between items-center"
         // style={{ padding: headerPadding }}
       >
         <Link
@@ -249,6 +263,15 @@ export default function Writings() {
           }}
         >
           <Masonry className="p-[10px] pt-0">
+            {writings.length === 0 &&
+              masonSkeleton.map((skeleton, index) => (
+                <Skeleton
+                  height={skeleton.height}
+                  width={skeleton.width}
+                  key={index}
+                  variant={"shine"}
+                ></Skeleton>
+              ))}
             {writings.map((writing, index) => (
               <CustomCard
                 isDraft={writing.draft}

@@ -34,10 +34,12 @@ export default function CommentCard({
   comment,
   id,
   commentRefresh,
+  setLogin,
 }: {
   comment: Comment;
   id: number;
   commentRefresh: () => void;
+  setLogin: () => void;
 }) {
   const { isAdmin } = useIsAdmin();
   const [edit, setEdit] = useState(false);
@@ -95,23 +97,24 @@ export default function CommentCard({
       }
     } else {
       console.error("User name is not defined.");
+      setLogin();
     }
   };
 
   const handleUnlike = async function () {
     try {
-      await removeLike(id, username || "");
+      if (!username) return;
+      await removeLike(id, username);
+      setLiked(false);
     } catch (error) {
       console.error(error);
-    } finally {
-      setLiked(false);
-      commentRefresh();
     }
   };
 
   const handleEdit = async function () {
     try {
-      if (username) {
+      if (!username) return;
+      if (username === comment.author || isAdmin) {
         await editComment(id, username, commentBody);
         alert("comment changed");
         setEdit(false);
@@ -126,9 +129,10 @@ export default function CommentCard({
 
   const handleReply = async function () {
     try {
-      if (!isValidComment(replyBody) || username) {
+      if (!isValidComment(replyBody) || !username) {
         return;
-      } else if (username) {
+      }
+      if (username) {
         await replyComment(id, username, replyBody);
         setReply(false);
         commentRefresh();
@@ -140,14 +144,17 @@ export default function CommentCard({
 
   const handleDeleteComment = async function () {
     try {
-      if (username) {
-        await deleteComment(id, username);
+      if (!username) return;
+      if (username === comment.author || isAdmin) {
+        await deleteComment(id, comment.author);
         setDeleted(true);
       }
     } catch (error) {
       console.log(error);
     } finally {
-      commentRefresh();
+      setTimeout(() => {
+        commentRefresh();
+      }, 3000);
     }
   };
 
@@ -169,7 +176,10 @@ export default function CommentCard({
           {liked ? (
             <FaHeart
               className="hover:cursor-pointer"
-              onClick={handleUnlike}
+              onClick={() => {
+                handleUnlike();
+                if (!session) setLogin();
+              }}
               size={22}
             />
           ) : (
@@ -219,8 +229,8 @@ export default function CommentCard({
       {showReplies || reply ? (
         <MotionBox className="ml-8 mt-6 w-full">
           <Stack gapY={8}>
-            {replies.map((reply, index) => (
-              <ReplyCard key={index} reply={reply}></ReplyCard>
+            {replies.map((reply) => (
+              <ReplyCard key={reply.id} reply={reply}></ReplyCard>
             ))}
             {reply && (
               <AnimatePresence>
@@ -276,6 +286,7 @@ export default function CommentCard({
         showReplies={() => setShowReplies(true)}
         hideReplies={() => setShowReplies(false)}
         setReply={() => setReply(true)}
+        setLogin={setLogin}
         replies={replies}
         replyShown={showReplies}
         onDelete={handleDeleteComment}

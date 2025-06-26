@@ -119,7 +119,7 @@ export default function BookCard({ book, onDelete }: { book: Book, onDelete: () 
         href={`/book/${book.id}`}
         className="flex flex-col duration-200 hover:scale-[.99] active:scale-100 shadow-lg border-solid border-[1px] md:border-[3px] border-black"
       >
-        <div className="flex justify-center items-center overflow-hidden relative hover:cursor-pointer h-[200px] w-[150px] md:h-[300px] md:w-[200px] lg:h-[400px] lg:w-[300px] duration-300">
+        <div className="flex justify-center items-center overflow-hidden relative hover:cursor-pointer h-[400px] w-[280px] duration-300">
           <Image
             className="min-h-full relative"
             src={book.photo}
@@ -137,7 +137,7 @@ export default function BookCard({ book, onDelete }: { book: Book, onDelete: () 
             />
           )}
         </div>
-        <h2 className="p-1 md:pt-3 text-center md:text-xl lg:text-3xl h-fit w-inherit text-black bg-[#fbf8f3] border-solid border-t-[3px] border-black">{`${book.title}`}</h2>
+        {/* <h2 className="p-1 md:pt-3 text-center md:text-xl lg:text-3xl h-fit w-inherit text-black bg-[#fbf8f3] border-solid border-t-[3px] border-black">{`${book.title}`}</h2> */}
       </Link>
     </div>
   );
