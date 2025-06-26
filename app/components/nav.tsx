@@ -66,7 +66,7 @@ export default function Nav() {
   };
 
   return (
-    <nav className="w-full flex justify-end pr-5 pt-5 lg:p-0 lg:justify-center">
+    <nav className="w-full flex justify-end pt-2 px-3 lg:p-0 lg:justify-center">
       <div className="lg:flex flex-row w-2/5 max-w-[665px] justify-between items-center text-2xl xl:text-4xl hidden h-40">
         <Link className="hover:underline relative inline-block" href={"/blog"}>
           <h2 className="z-10">Blog</h2>
