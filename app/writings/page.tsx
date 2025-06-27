@@ -15,11 +15,10 @@ import {
   Skeleton,
   // Icon,
 } from "@chakra-ui/react";
-// import { FaCheck, FaTimes } from "react-icons/fa";
 import CustomCard from "../components/customCard";
 import CustomModal from "../components/customModal";
 import { Writing } from "../lib/definitions";
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, FormEvent, useRef } from "react";
 import { getWritings, addWritingPost } from "../lib/actions";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
@@ -28,6 +27,7 @@ import { motion } from "framer-motion";
 import Nav from "../components/nav";
 import { Monsieur_La_Doulaise } from "next/font/google";
 import { LoginModal } from "../components/loginModal";
+import { type PutBlobResult } from "@vercel/blob";
 
 const monsieurLaDoulaise = Monsieur_La_Doulaise({
   weight: "400",
@@ -93,9 +93,7 @@ export default function Writings() {
   const { data: session } = useSession();
   const [visibile, setVisible] = useState(false);
   const { isAdmin } = useIsAdmin();
-  //animation variables for header animation
-  // const headerTitleOpacity = useTransform(scrollY, [0, 50], ["0", "1"]);
-  // const headerPadding = useTransform(scrollY, [0,50], ["16px","8px"])
+  const inputFileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchWritings = async () => {
@@ -117,13 +115,29 @@ export default function Writings() {
     const photo = formData.get("photo");
     const title = formData.get("title");
     try {
-      if (!photo || !title) {
+      if (!title) {
         alert("Please fill everything out Kierstyn!❤️");
         setLoading(false);
         return;
       }
+      
+      if (!inputFileRef.current?.files) {
+        throw new Error("No file selected");
+      }
+
+      const file = inputFileRef.current.files[0];
+
+      const response = await fetch(
+        `/api/photo/upload?filename=${file.name}`,
+        {
+          method: 'POST',
+          body: file,
+        }
+      )
+
+      const newBlob = (await response.json()) as PutBlobResult;
       await addWritingPost(
-        photo.toString(),
+        !photo ? newBlob.url : photo.toString(),
         title.toString(),
         post,
         checked ? true : false
@@ -144,45 +158,47 @@ export default function Writings() {
       animate={{ opacity: 1 }}
     >
       {login && <LoginModal onClose={() => setLogin(false)}></LoginModal>}
-      <motion.nav
-        className="top-0 left-0 z-20 flex flex-wrap justify-between items-center"
+      <header
+        className="top-0 left-0 z-20"
         // style={{ padding: headerPadding }}
       >
-        <Link
-          href="/"
-          className="active:border-none flex items-center -mr-[40px] z-10"
-        >
-          <button
-            onClick={() => window.location.assign("/")}
-            className={`${monsieurLaDoulaise.className} antialiased absolute top-[3%] left-[3%] lg:p-3 text-3xl sm:text-xl lg:text-6xl text-black hover:cursor-pointer hover:scale-[1.05] duration-200`}
+        <nav className="flex justify-center items-center ">
+          <Link
+            href="/"
+            className="active:border-none flex items-center pt-3 lg:p-0 z-10"
           >
-            K
-          </button>
-        </Link>
-        <Nav></Nav>
-        {session ? (
-          <Button
-            className="text-2xl lg:text-3xl lg:p-6 absolute top-[3%] right-[3%] hover:underline hidden lg:inline-flex"
-            variant={"plain"}
-            onClick={() => signOut()}
-          >
-            Sign Out
-          </Button>
-        ) : (
-          <div>
-            <Button
-              className="text-2xl lg:text-3xl lg:p-6 hover:underline absolute top-[3%] right-[3%] hidden lg:inline-flex"
-              variant={"plain"}
-              onClick={() => setLogin(true)}
+            <button
+              onClick={() => window.location.assign("/")}
+              className={`${monsieurLaDoulaise.className} antialiased absolute pt-5 pl-5 lg:pl-10 text-4xl md:text-5xl lg:text-7xl text-black hover:cursor-pointer hover:scale-[1.05] duration-200`}
             >
-              Sign In
+              K
+            </button>
+          </Link>
+          <Nav></Nav>
+          {session ? (
+            <Button
+              className="text-2xl lg:text-3xl lg:p-6 absolute top-[3%] right-[3%] hover:underline hidden lg:inline-flex"
+              variant={"plain"}
+              onClick={() => signOut()}
+            >
+              Sign Out
             </Button>
-          </div>
-        )}
+          ) : (
+            <div>
+              <Button
+                className="text-2xl lg:text-3xl lg:p-6 hover:underline absolute top-[3%] right-[3%] hidden lg:inline-flex"
+                variant={"plain"}
+                onClick={() => setLogin(true)}
+              >
+                Sign In
+              </Button>
+            </div>
+          )}
+        </nav>
         <h1 className="scroll-p-3.5 py-5 lg:py-20 text-3xl lg:text-8xl w-full text-center">
           Writings
         </h1>
-      </motion.nav>
+      </header>
       <main>
         {isAdmin && (
           <IconButton
@@ -205,10 +221,13 @@ export default function Writings() {
             <form onSubmit={handlePost}>
               <Fieldset.Root>
                 <Stack>
-                  <Field.Root>
-                    <FieldLabel>Photo</FieldLabel>
-                    <Input name="photo" />
-                  </Field.Root>
+                  <div className="flex flex-wrap md:flex-nowrap items-end gap-2">
+                    <Field.Root>
+                      <FieldLabel>Photo</FieldLabel>
+                      <Input name="photo" />
+                    </Field.Root>
+                    <input type="file" ref={inputFileRef} accept="image/*"/>
+                  </div>
                   <Field.Root>
                     <FieldLabel>Title</FieldLabel>
                     <Input name="title" />
@@ -222,7 +241,7 @@ export default function Writings() {
                         formats={formats}
                         placeholder="Compose your epic Kierstyn Hart!"
                         onChange={(value) => setPost(value)}
-                        className="h-1/2"
+                        className="w-full h-1/2"
                       />
                     </div>
                   </Field.Root>

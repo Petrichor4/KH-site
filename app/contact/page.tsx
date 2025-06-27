@@ -3,32 +3,44 @@
 import { Button, Stack, Input, Textarea } from "@chakra-ui/react";
 import Link from "next/link";
 import { CiLocationOn, CiMail, CiInstagram } from "react-icons/ci";
-import { motion } from "framer-motion"
-import { GoArrowLeft } from "react-icons/go";
+import { motion } from "framer-motion";
+import Nav from "../components/nav";
+import { Monsieur_La_Doulaise } from "next/font/google";
 
 //   import { useState } from "react";
+const monsieurLaDoulaise = Monsieur_La_Doulaise({
+  weight: "400",
+  preload: true,
+  subsets: ["latin"],
+  style: "normal",
+  display: "swap",
+});
 
 export default function ContactPage() {
-  // const [loading, setLoading] = useState(false);
-
-  // const handleSubmitContact = async() => {
-
-  // }
+  
+  
 
   return (
-    <>
-      <main className="flex justify-center items-center flex-wrap md:flex-nowrap">
-        <Link href="/" className="active:border-none absolute top-4 left-4">
-        <motion.button className="hover:cursor-pointer"
-            whileHover={{
-              x: 10,
-              transition: { duration: .8, repeat: Infinity, repeatType: "mirror", ease: "easeInOut" },
-            }}
-            whileTap={{ scale: 0.9, x: 0 }}
+    <motion.div
+      initial={{ opacity: 0, transition: { duration: 0.3 } }}
+      animate={{ opacity: 1 }}
+    >
+      <header className="flex justify-center items-center">
+        <Link
+          href="/"
+          className="active:border-none flex items-center pt-3 lg:p-0 z-10"
+        >
+          <button
+            onClick={() => window.location.assign("/")}
+            className={`${monsieurLaDoulaise.className} antialiased absolute pt-5 pl-5 lg:pl-10 text-4xl md:text-5xl lg:text-7xl text-black hover:cursor-pointer hover:scale-[1.05] duration-200`}
           >
-            <GoArrowLeft size={40} />
-          </motion.button>
+            K
+          </button>
         </Link>
+
+        <Nav></Nav>
+      </header>
+      <main className="flex justify-center items-center flex-wrap md:flex-nowrap">
         <div className="w-5/6 md:w-1/2">
           <Stack className="p-10 contact-form">
             <h2>Name</h2>
@@ -58,7 +70,7 @@ export default function ContactPage() {
         <div className="flex flex-col w-1/2 content-around gap-12 items-center lg:text-2xl">
           <div className="flex items-center gap-2">
             <CiLocationOn />
-            <h2>Salt Lake City, Utah</h2>
+            <h2>Middle of Nowhere, Iowa</h2>
           </div>
           <div className="flex items-center gap-2">
             <CiMail />
@@ -70,6 +82,6 @@ export default function ContactPage() {
           </div>
         </div>
       </main>
-    </>
+    </motion.div>
   );
 }

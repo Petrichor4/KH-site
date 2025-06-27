@@ -109,8 +109,6 @@ export default function Home() {
     >
       <Nav></Nav>
       <motion.header
-        // initial={{ opacity: 0, scale: 1.2 }}
-        // animate={{ opacity: 1, scale: 1, transition: { duration: 0.5 } }}
         className="w-full flex flex-wrap justify-center h-[500px] md:h-[900px] lg:h-[81vh]"
       >
         <motion.h1

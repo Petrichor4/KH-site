@@ -28,6 +28,14 @@ export async function editHeaderData(
   }
 }
 
+export async function editEventText(text: string) {
+  try {
+    await sql<HeaderData>`UPDATE kh SET events = ${text}`
+  } catch (error) {
+    console.error(error)
+  }
+} 
+
 /*
 ---------------
 User actions

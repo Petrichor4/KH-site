@@ -207,7 +207,7 @@ export default function BlogPost() {
         animate={{ y: showHeader ? 0 : "-100%" }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-        <Link href="/blog" className="flex items-center -mr-[40px] z-10">
+        <Link href="/blog" className="flex items-center  z-10">
           <motion.button
             className="hover:cursor-pointer text-white"
             whileHover={{
