@@ -6,6 +6,8 @@ import { getServerSession } from "next-auth";
 import { ThemeProvider } from "next-themes";
 import ClientSessionProvider from "./components/ClientSessionProvider";
 import Footer from "./components/footer";
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const LCD = Libre_Caslon_Display({
   weight: "400",
@@ -28,6 +30,8 @@ export default async function RootLayout({
   // console.log({ session });
   return (
     <html lang="en" suppressHydrationWarning>
+      <Analytics />
+      <SpeedInsights />
       <body  className={`bg-[#fbf8f3] text-black ${LCD.className}`}>
         <ClientSessionProvider session={session}>
           <ThemeProvider enableSystem={false}>
