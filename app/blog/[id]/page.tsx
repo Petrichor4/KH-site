@@ -146,7 +146,7 @@ export default function BlogPost() {
         return;
       }
       if (!blog) return;
-      await editBlogPost(photo.toString(), title.toString(), post, blog.id);
+      await editBlogPost(photo.toString(), title.toString(), post, blog.id, checked ? true : false);
       alert("post edited sucessfully!");
       setVisible(false);
     } catch (error) {

@@ -36,17 +36,22 @@ export function LoginModal({onClose}:{onClose: () => void}) {
       return;
     }
 
-    await fetch("/api/auth/register", {
+    const res = await fetch("/api/auth/register", {
       method: "POST",
+      headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
         username: username,
         password: password,
       }),
     });
-    console.log("username length:", username.toString().length);
-    setAlert("account created succesfully!");
+    if (!res.ok) {
+      const data = await res.json();
+      setAlert( data?.error || 'Something went wrong')
+      setLoading(false);
+      return;
+    }
     setLoading(false);
-    setLogIn(true);
+    // console.log("username length:", username.toString().length);
   };
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
@@ -134,26 +139,26 @@ export function LoginModal({onClose}:{onClose: () => void}) {
               <Field.Root invalid={!!alert}>
                 <Field.Label fontSize={"xl"}>Username</Field.Label>
                 <Input name="username" size={"lg"} fontSize={"lg"} />
-                <Field.ErrorText>{alert}</Field.ErrorText>
               </Field.Root>
               <Field.Root invalid={!!alert}>
                 <Field.Label fontSize={"xl"}>Password</Field.Label>
                 <Input name="password" size={"lg"} fontSize={"lg"} />
-                <Field.ErrorText>{alert}</Field.ErrorText>
               </Field.Root>
               <Field.Root invalid={!!alert}>
                 <Field.Label fontSize={"xl"}>Confirm Password</Field.Label>
                 <Input name="password-confirm" size={"lg"} fontSize={"lg"} />
-                <Field.ErrorText>{alert}</Field.ErrorText>
+                <Field.ErrorText className='text-xl'>{alert}</Field.ErrorText>
               </Field.Root>
-              <Button
-                type="submit"
-                loading={loading}
-                loadingText="Creating account"
-                className="self-end active:opacity-75 mb-4 text-xl"
-              >
-                Sign Up
-              </Button>
+              <div className="flex justify-end">
+                <Button
+                  type="submit"
+                  loading={loading}
+                  loadingText="Creating account"
+                  className="self-end active:opacity-75 mb-4 text-xl"
+                >
+                  Sign Up
+                </Button>
+              </div>
             </Stack>
             <p className="text-xl">
               Have an account?{" "}

@@ -5,29 +5,32 @@ import { signOut, useSession } from "next-auth/react";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import {
   Button,
-  IconButton,
-  Fieldset,
-  Stack,
   Field,
   FieldLabel,
+  Fieldset,
+  IconButton,
   Input,
-  Switch,
   Skeleton,
+  Stack,
+  Switch,
   // Icon,
 } from "@chakra-ui/react";
 import CustomCard from "../components/customCard";
-import CustomModal from "../components/customModal";
+// import PostModal from "../components/PostModal";
 import { Writing } from "../lib/definitions";
 import { useState, useEffect, FormEvent, useRef } from "react";
 import { getWritings, addWritingPost } from "../lib/actions";
-import dynamic from "next/dynamic";
-import "react-quill-new/dist/quill.snow.css";
 import { useIsAdmin } from "../components/useIsAdmin";
 import { motion } from "framer-motion";
 import Nav from "../components/nav";
 import { Monsieur_La_Doulaise } from "next/font/google";
 import { LoginModal } from "../components/loginModal";
 import { type PutBlobResult } from "@vercel/blob";
+import useHeaderData from "../components/UseHeaderData";
+import dynamic from "next/dynamic";
+import "react-quill-new/dist/quill.snow.css";
+
+import CustomModal from "../components/customModal";
 
 const monsieurLaDoulaise = Monsieur_La_Doulaise({
   weight: "400",
@@ -40,6 +43,7 @@ const monsieurLaDoulaise = Monsieur_La_Doulaise({
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 export default function Writings() {
+
   const modules = {
     toolbar: [
       [{ header: [1, 2, false] }],
@@ -48,7 +52,7 @@ export default function Writings() {
       ["bold", "italic", "underline", "strike", "blockquote"],
       [
         { list: "ordered" },
-        { list: "bullet" },
+        // { list: "bullet" },
         { indent: "-1" },
         { indent: "+1" },
       ],
@@ -65,7 +69,7 @@ export default function Writings() {
     "strike",
     "blockquote",
     "list",
-    "bullet",
+    // "bullet",
     "indent",
     "link",
     "image",
@@ -91,6 +95,7 @@ export default function Writings() {
   const [login, setLogin] = useState(false);
   const [post, setPost] = useState("");
   const { data: session } = useSession();
+  const { headerData } = useHeaderData();
   const [visibile, setVisible] = useState(false);
   const { isAdmin } = useIsAdmin();
   const inputFileRef = useRef<HTMLInputElement>(null);
@@ -120,20 +125,17 @@ export default function Writings() {
         setLoading(false);
         return;
       }
-      
+
       if (!inputFileRef.current?.files) {
         throw new Error("No file selected");
       }
 
       const file = inputFileRef.current.files[0];
 
-      const response = await fetch(
-        `/api/photo/upload?filename=${file.name}`,
-        {
-          method: 'POST',
-          body: file,
-        }
-      )
+      const response = await fetch(`/api/photo/upload?filename=${file.name}`, {
+        method: "POST",
+        body: file,
+      });
 
       const newBlob = (await response.json()) as PutBlobResult;
       await addWritingPost(
@@ -174,7 +176,7 @@ export default function Writings() {
               K
             </button>
           </Link>
-          <Nav></Nav>
+          <Nav headerData={headerData}></Nav>
           {session ? (
             <Button
               className="text-2xl lg:text-3xl lg:p-6 absolute top-[3%] right-[3%] hover:underline hidden lg:inline-flex"
@@ -226,7 +228,7 @@ export default function Writings() {
                       <FieldLabel>Photo</FieldLabel>
                       <Input name="photo" />
                     </Field.Root>
-                    <input type="file" ref={inputFileRef} accept="image/*"/>
+                    <input type="file" ref={inputFileRef} accept="image/*" />
                   </div>
                   <Field.Root>
                     <FieldLabel>Title</FieldLabel>
@@ -251,7 +253,7 @@ export default function Writings() {
                 <Switch.Root
                   colorPalette={"blue"}
                   size={"lg"}
-                  onClick={() => setChecked((prev) => !prev)}
+                  onClick={() => setChecked((prev: boolean) => !prev)}
                   checked={checked}
                 >
                   <Switch.Label className="text-lg">

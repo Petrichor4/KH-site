@@ -24,7 +24,7 @@ export async function editHeaderData(
   try {
     await sql<HeaderData>`UPDATE kh SET about_me = ${bio}, portrait = ${selfie}, hero_image = ${heroPhoto}`;
   } catch (error) {
-    console.error(error);
+    throw new Error(error);
   }
 }
 
@@ -45,11 +45,7 @@ User actions
 export async function addUser(username: string, password: string) {
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
-  try {
     await sql<User>`INSERT INTO users (username, password) VALUES (${username}, ${hashedPassword})`;
-  } catch (error) {
-    console.error(error);
-  }
 }
 
 export async function getUserByUsername(username: string) {
@@ -103,9 +99,9 @@ export async function getBlog(id: number) {
   }
 }
 
-export async function addBlogPost(photo: string, title: string, post: string) {
+export async function addBlogPost(photo: string, title: string, post: string, draft: boolean) {
   try {
-    await sql`INSERT INTO blogs (photo, title, post) VALUES (${photo}, ${title}, ${post})`;
+    await sql`INSERT INTO blogs (photo, title, post, draft) VALUES (${photo}, ${title}, ${post}, ${draft})`;
   } catch (error) {
     console.log(error);
   }
@@ -115,10 +111,11 @@ export async function editBlogPost(
   photo: string,
   title: string,
   post: string,
-  id: string
+  id: string,
+  draft: boolean,
 ) {
   try {
-    await sql`UPDATE blogs SET photo =${photo}, title = ${title}, post = ${post} WHERE id = ${id}`;
+    await sql`UPDATE blogs SET photo =${photo}, title = ${title}, post = ${post}, draft = ${draft} WHERE id = ${id}`;
   } catch (error) {
     console.log(error);
   }

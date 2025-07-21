@@ -4,8 +4,8 @@ import Nav from "./components/nav";
 import { Image, Box } from "@chakra-ui/react";
 import InfoCard from "./components/InfoCard";
 import { useState, useEffect, FormEvent } from "react";
-import { HeaderData, Book } from "./lib/definitions";
-import { getBooks, getHeaderData, addBook } from "./lib/actions";
+import { Book } from "./lib/definitions";
+import { getBooks, addBook } from "./lib/actions";
 import BookCard from "./components/bookCard";
 import { useIsAdmin } from "./components/useIsAdmin";
 import { HiOutlinePlus } from "react-icons/hi";
@@ -20,6 +20,7 @@ import {
   Input,
   Textarea,
 } from "@chakra-ui/react";
+import useHeaderData from "./components/UseHeaderData";
 // import { useRouter } from "next/router";
 
 const monsieurLaDoulaise = Monsieur_La_Doulaise({
@@ -35,22 +36,13 @@ export default function Home() {
   const MotionBox = motion.create(Box);
   const [triggerRefresh, setTriggerRefresh] = useState(false);
   const { isAdmin } = useIsAdmin();
-  const [headerData, setHeaderData] = useState<HeaderData[]>([]);
+  const { headerData, headerLoading } = useHeaderData();
   const [visible, setVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [books, setBooks] = useState<Book[]>([]);
 
   // console.log(headerData);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await getHeaderData();
-      if (response) {
-        setHeaderData(response);
-      }
-    };
-    fetchData();
-  }, []);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -99,15 +91,16 @@ export default function Home() {
     }
   };
 
-  if (headerData.length === 0)
+  if (headerLoading || !headerData) {
     return <main className="flex justify-center items-center"></main>;
+  }
 
   return (
     <motion.div
       initial={{ opacity: 0, transition: { duration: 0.3 } }}
       animate={{ opacity: 1 }}
     >
-      <Nav></Nav>
+      <Nav headerData={headerData}></Nav>
       <motion.header
         className="w-full flex flex-wrap justify-center h-[500px] md:h-[900px] lg:h-[81vh]"
       >
@@ -129,7 +122,7 @@ export default function Home() {
             animate={{ opacity: 0, transition: { delay: 1, duration: 0.8 } }}
           ></motion.span>
           <Image
-            src={headerData[0].hero_image}
+            src={headerData.hero_image}
             alt="Photo of a writing desk belonging to Kierstyn Hart"
             className="w-full max-h-full"
           ></Image>
@@ -182,8 +175,8 @@ export default function Home() {
         <span className="h-[200px] md:h-[23.15vh] w-full block"></span>
         <div className="md:w-2/3 self-center mt-16 lg:mt-32">
           <InfoCard
-            image={headerData[0].portrait}
-            desc={headerData[0].about_me}
+            image={headerData.portrait}
+            desc={headerData.about_me}
           ></InfoCard>
         </div>
         <h2 className="flex justify-center items-center text-3xl md:text-4xl lg:text-5xl h-36 lg:h-60">

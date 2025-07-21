@@ -12,6 +12,7 @@ import {
   Input,
   Skeleton,
   Switch,
+  Text,
 } from "@chakra-ui/react";
 import CustomCard from "../components/customCard";
 import { Blog } from "../lib/definitions";
@@ -27,6 +28,7 @@ import Nav from "../components/nav";
 import { Monsieur_La_Doulaise } from "next/font/google";
 import { LoginModal } from "../components/loginModal";
 import { PutBlobResult } from "@vercel/blob";
+import useHeaderData from "../components/UseHeaderData";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
@@ -57,7 +59,9 @@ export default function BlogPage() {
   const [login, setLogin] = useState(false);
   const [visibile, setVisible] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [blogLoading, setBlogLoading] = useState(true);
   const { data: session } = useSession();
+  const { headerData } = useHeaderData();
   const { isAdmin } = useIsAdmin();
   const [post, setPost] = useState("");
   const [loading, setLoading] = useState(false);
@@ -98,8 +102,10 @@ export default function BlogPage() {
 
   useEffect(() => {
     const fetchBlogs = async () => {
+      setBlogLoading(true);
       const response = await getBlogs();
       setBlogs(response);
+      setBlogLoading(false);
     };
     fetchBlogs();
   }, []);
@@ -111,7 +117,7 @@ export default function BlogPage() {
     const photo = formData.get("photo");
     const title = formData.get("title");
     try {
-      if (!photo || !title) {
+      if (!title) {
         alert("Please fill everything out Kierstyn!❤️");
         return;
       }
@@ -132,7 +138,8 @@ export default function BlogPage() {
       await addBlogPost(
         !photo ? newBlob.url : photo.toString(),
         title.toString(),
-        post
+        post,
+        checked ? true : false
       );
       alert("post added sucessfully!");
       setVisible(false);
@@ -167,7 +174,7 @@ export default function BlogPage() {
               K
             </button>
           </Link>
-          <Nav></Nav>
+          <Nav headerData={headerData}></Nav>
           {session ? (
             <Button
               className="text-2xl lg:text-3xl lg:p-6 absolute top-[3%] right-[3%] hover:underline hidden lg:inline-flex"
@@ -265,6 +272,17 @@ export default function BlogPage() {
             </form>
           </CustomModal>
         )}
+        {blogLoading === false && blogs.length === 0 && (
+          <div className="flex w-full justify-center">
+            <Text className="text-3xl">
+              No posts yet... stay tuned for the first post coming soon! In the
+              meantime check out my{" "}
+              <Link className="underline text-blue-500" href={"/writings"}>
+                writings
+              </Link>
+            </Text>
+          </div>
+        )}
         <ResponsiveMasonry
           columnsCountBreakPoints={{
             500: 2,
@@ -275,7 +293,7 @@ export default function BlogPage() {
           }}
         >
           <Masonry className="p-[10px] pt-0">
-            {blogs.length === 0 &&
+            {blogLoading &&
               masonSkeleton.map((skeleton, index) => (
                 <Skeleton
                   height={skeleton.height}

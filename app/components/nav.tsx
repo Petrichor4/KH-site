@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 import { VscMenu } from "react-icons/vsc";
 import {
   DrawerBackdrop,
@@ -15,55 +15,25 @@ import {
 } from "@/components/ui/drawer";
 import {
   Button,
-  Fieldset,
-  Stack,
-  Field,
-  FieldLabel,
-  Input,
-  Textarea,
 } from "@chakra-ui/react";
 import { useIsAdmin } from "./useIsAdmin";
-import { editHeaderData } from "../lib/actions";
 import CustomModal from "./customModal";
 import { signOut, useSession } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LoginModal } from "./loginModal";
+import HeaderForm from "./HeaderForm";
+import { HeaderData } from "../lib/definitions";
 
-export default function Nav() {
+export default function Nav({headerData}:{headerData: HeaderData | undefined}) {
   // interface Photos {
   //   id: string
   // }
 
   const [visible, setVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [login, setLogin] = useState(false);
   const { data: session } = useSession();
   const { isAdmin } = useIsAdmin();
 
-  const handleEditHeaderData = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setLoading(true);
-    const formData = new FormData(e.currentTarget);
-    const heroPhoto = formData.get("heroPhoto")?.toString();
-    const selfie = formData.get("portrait")?.toString();
-    const bio = formData.get("aboutMe")?.toString();
-    try {
-      if (!heroPhoto || !selfie || !bio) {
-        alert("Make sure there are no empty values");
-        return;
-      }
-      await editHeaderData(heroPhoto, selfie, bio);
-      alert("Sucessfully edited header!");
-      setVisible(false);
-    } catch (error) {
-      alert(`Error editing header data: ${error}`);
-      setLoading(false);
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <nav className="w-full flex justify-end pt-5 pr-3 lg:p-0 lg:justify-center">
@@ -95,35 +65,9 @@ export default function Nav() {
             isOpen={true}
             onClose={() => setVisible((prev) => !prev)}
           >
-            <form onSubmit={handleEditHeaderData}>
-              <Fieldset.Root>
-                <Stack>
-                  <Field.Root>
-                    <FieldLabel>Hero Photo</FieldLabel>
-                    <Input name="heroPhoto" type="text" />
-                  </Field.Root>
-                  <Field.Root>
-                    <FieldLabel>Portrait</FieldLabel>
-                    <Input name="portrait" />
-                  </Field.Root>
-                  <Field.Root>
-                    <FieldLabel>About Me</FieldLabel>
-                    <Textarea name="aboutMe" className="h-40"></Textarea>
-                  </Field.Root>
-                </Stack>
-              </Fieldset.Root>
-              <div className="flex justify-end mt-4">
-                <Button
-                  type="submit"
-                  bg={"#828698"}
-                  _hover={{ opacity: "50%" }}
-                  size={"lg"}
-                  loading={loading}
-                >
-                  Confirm
-                </Button>
-              </div>
-            </form>
+            <HeaderForm
+              headerData={headerData}
+            />{" "}
           </CustomModal>
         )}
       </div>
@@ -138,9 +82,7 @@ export default function Nav() {
             <DrawerTitle />
           </DrawerHeader>
           <DrawerBody className="flex mt-8 text-black flex-col items-center">
-            {login && (
-              <LoginModal onClose={() => setLogin(false)}></LoginModal>
-            )}
+            {login && <LoginModal onClose={() => setLogin(false)}></LoginModal>}
             <div className="flex flex-col text-5xl gap-6">
               <Link href={"/blog"} className="active:underline">
                 <h2>Blog</h2>
@@ -201,35 +143,9 @@ export default function Nav() {
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: -20, opacity: 0, height: 0 }}
                 >
-                  <form onSubmit={handleEditHeaderData}>
-                    <Fieldset.Root>
-                      <Stack>
-                        <Field.Root>
-                          <FieldLabel>Hero Photo</FieldLabel>
-                          <Input name="heroPhoto" />
-                        </Field.Root>
-                        <Field.Root>
-                          <FieldLabel>Portrait</FieldLabel>
-                          <Input name="portrait" />
-                        </Field.Root>
-                        <Field.Root>
-                          <FieldLabel>About Me</FieldLabel>
-                          <Textarea name="aboutMe" className="h-40"></Textarea>
-                        </Field.Root>
-                      </Stack>
-                    </Fieldset.Root>
-                    <div className="flex justify-end mt-4">
-                      <Button
-                        type="submit"
-                        bg={"#828698"}
-                        _hover={{ opacity: "50%" }}
-                        size={"lg"}
-                        loading={loading}
-                      >
-                        Confirm
-                      </Button>
-                    </div>
-                  </form>
+                  <HeaderForm
+                    headerData={headerData}
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
