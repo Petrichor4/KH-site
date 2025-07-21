@@ -59,13 +59,14 @@ export default function Nav({headerData}:{headerData: HeaderData | undefined}) {
             Edit
           </button>
         )}
-        {visible && (
+        {visible && headerData && (
           <CustomModal
             title="Edit Header"
             isOpen={true}
             onClose={() => setVisible((prev) => !prev)}
           >
             <HeaderForm
+              setVisible={() => setVisible(false)}
               headerData={headerData}
             />{" "}
           </CustomModal>
@@ -135,7 +136,7 @@ export default function Nav({headerData}:{headerData: HeaderData | undefined}) {
               )}
             </div>
             <AnimatePresence initial={false}>
-              {visible && (
+              {visible && headerData && (
                 <motion.div
                   className="editContainer w-full py-8"
                   transition={{ duration: 0.8, ease: [0, 0.71, 0.2, 1.01] }}
@@ -144,6 +145,7 @@ export default function Nav({headerData}:{headerData: HeaderData | undefined}) {
                   exit={{ y: -20, opacity: 0, height: 0 }}
                 >
                   <HeaderForm
+                    setVisible={() => setVisible(false)}
                     headerData={headerData}
                   />
                 </motion.div>
