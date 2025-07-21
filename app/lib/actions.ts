@@ -24,7 +24,7 @@ export async function editHeaderData(
   try {
     await sql<HeaderData>`UPDATE kh SET about_me = ${bio}, portrait = ${selfie}, hero_image = ${heroPhoto}`;
   } catch (error) {
-    throw new Error(error);
+    console.error(error)
   }
 }
 
