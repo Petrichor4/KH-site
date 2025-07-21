@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kierstyn Hart Writings
 
-## Getting Started
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-First, run the development server:
+## Description
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+A portfolio website built to showcase the writings and work of author **Kierstyn Hart**. The site is clean, responsive, and designed for easy navigation by both readers and publishers.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Table of Contents
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- [Installation](#installation)
+- [Usage](#usage)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Contributing](#contributing)
+- [License](#license)
+- [Tests](#tests)
+- [Questions](#questions)
+- [Deployment and CI/CD](#deployment-and-ci-cd)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Installation
 
-## Learn More
+This site is deployed and available online. No local installation is required.
 
-To learn more about Next.js, take a look at the following resources:
+👉 [Visit the live site](https://kierstynhartwritings.com)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Use the navigation buttons to browse different sections of the site, including published works, about page, and contact form.
 
-## Deploy on Vercel
+![Screenshot of the website](https://github.com/user-attachments/assets/36690b61-6711-4d11-b65c-9de919cef9b7)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Features
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Author bio and contact section
+- Highlighted writings and projects
+- Smooth navigation and responsive layout
+
+## Tech Stack
+
+- **Framework**: [Next.js](https://nextjs.org/)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Animation**: Framer Motion
+- **Deployment**: [Vercel](https://vercel.com/)
+- **Version Control**: Git + GitHub
+- **Rich-Text Editors**: React Quill
+
+## Deployment and CI/CD
+- Deployed on **Vercel** – every push to **`main`** triggers an automatic build and deploy.
+- [![Vercel](https://vercelbadge.vercel.app/api/Petrichor4/KH-site)](https://kierstynhartwritings.com)
+
+## Contributing
+
+Currently no external contributors.
+If you'd like to collaborate, feel free to fork the repo and open a pull request.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Tests
+
+No tests included at this time.
+
+## Questions
+
+GitHub: [Petrichor4](https://github.com/Petrichor4)  
+Email: stonepreston05@gmail.com
