@@ -6,6 +6,7 @@ import { Link, Text, Textarea } from "@chakra-ui/react";
 import { editEventText, getHeaderData } from "../lib/actions";
 import { useIsAdmin } from "../components/useIsAdmin";
 import { Monsieur_La_Doulaise } from "next/font/google";
+import useHeaderData from "../components/UseHeaderData";
 
 const monsieurLaDoulaise = Monsieur_La_Doulaise({
   weight: "400",
@@ -20,6 +21,7 @@ export default function EventPage() {
   const [text, setText] = useState("");
   const [refresh, setRefresh] = useState(false);
   const { isAdmin } = useIsAdmin();
+  const { headerData } = useHeaderData();
   const [edit, setEdit] = useState(false);
 
   useEffect(() => {
@@ -58,7 +60,7 @@ export default function EventPage() {
             </button>
           </Link>
 
-          <Nav></Nav>
+          <Nav headerData={headerData}></Nav>
         </nav>
       </header>
       <main className="text-xl md:text-5xl flex  justify-center items-center">

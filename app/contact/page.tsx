@@ -6,6 +6,7 @@ import { CiLocationOn, CiMail, CiInstagram } from "react-icons/ci";
 import { motion } from "framer-motion";
 import Nav from "../components/nav";
 import { Monsieur_La_Doulaise } from "next/font/google";
+import useHeaderData from "../components/UseHeaderData";
 
 //   import { useState } from "react";
 const monsieurLaDoulaise = Monsieur_La_Doulaise({
@@ -18,7 +19,7 @@ const monsieurLaDoulaise = Monsieur_La_Doulaise({
 
 export default function ContactPage() {
   
-  
+  const { headerData } = useHeaderData();
 
   return (
     <motion.div
@@ -38,7 +39,7 @@ export default function ContactPage() {
           </button>
         </Link>
 
-        <Nav></Nav>
+        <Nav headerData={headerData}></Nav>
       </header>
       <main className="flex justify-center items-center flex-wrap md:flex-nowrap">
         <div className="w-5/6 md:w-1/2">
