@@ -3,16 +3,19 @@ import { HiOutlineX } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ModalProps {
+  isOpen: boolean;
   onClose: () => void;
   title: string;
   children: React.ReactNode;
 }
 
 const CustomModal: React.FC<ModalProps> = ({
+  isOpen,
   onClose,
   title,
   children,
 }) => {
+  if (!isOpen) return null;
 
   return (
     <Flex

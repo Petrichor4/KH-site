@@ -243,6 +243,7 @@ export default function BlogPost() {
         {visible && (
           <CustomModal
             title="New Post"
+            isOpen={true}
             onClose={() => setVisible(false)}
           >
             <form onSubmit={handleEditPost}>

@@ -254,6 +254,7 @@ export default function WritingsPost() {
         {visible && (
           <CustomModal
             title="New Post"
+            isOpen={true}
             onClose={() => setVisible(false)}
           >
             <form onSubmit={handleEditPost}>

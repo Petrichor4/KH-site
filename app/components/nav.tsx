@@ -63,6 +63,7 @@ export default function Nav({headerData}:{headerData: HeaderData | undefined}) {
           {visible && headerData && (
             <CustomModal
               title="Edit Header"
+              isOpen={true}
               onClose={() => setVisible((prev) => !prev)}
             >
               <HeaderForm
