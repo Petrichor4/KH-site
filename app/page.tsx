@@ -132,7 +132,6 @@ export default function Home() {
         {visible && (
           <CustomModal
             title="New Book"
-            isOpen={true}
             onClose={() => setVisible(false)}
           >
             <form

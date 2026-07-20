@@ -59,18 +59,19 @@ export default function Nav({headerData}:{headerData: HeaderData | undefined}) {
             Edit
           </button>
         )}
-        {visible && headerData && (
-          <CustomModal
-            title="Edit Header"
-            isOpen={true}
-            onClose={() => setVisible((prev) => !prev)}
-          >
-            <HeaderForm
-              setVisible={() => setVisible(false)}
-              headerData={headerData}
-            />{" "}
-          </CustomModal>
-        )}
+        <AnimatePresence>
+          {visible && headerData && (
+            <CustomModal
+              title="Edit Header"
+              onClose={() => setVisible((prev) => !prev)}
+            >
+              <HeaderForm
+                setVisible={() => setVisible(false)}
+                headerData={headerData}
+              />{" "}
+            </CustomModal>
+          )}
+        </AnimatePresence>
       </div>
       <DrawerRoot size={"lg"}>
         <DrawerBackdrop />

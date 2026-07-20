@@ -19,6 +19,7 @@ export default function Footer() {
             <div className="flex items-center flex-wrap justify-center gap-2 pb-2 max-sm:w-4/5">
                 <h3 className="text-white text-center">Join The Newsletter:</h3>
                 <Input placeholder="Email" variant={"subtle"} className="h-9 w-2/3 pb-1 text-2xl md:text-3xl" />
+                <a href="https://www.vecteezy.com/free-videos/accept">Accept Stock Videos by Vecteezy</a>
             </div>
         </footer>
     )

@@ -3,19 +3,16 @@ import { HiOutlineX } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ModalProps {
-  isOpen: boolean;
   onClose: () => void;
   title: string;
   children: React.ReactNode;
 }
 
 const CustomModal: React.FC<ModalProps> = ({
-  isOpen,
   onClose,
   title,
   children,
 }) => {
-  if (!isOpen) return null;
 
   return (
     <Flex
@@ -30,7 +27,12 @@ const CustomModal: React.FC<ModalProps> = ({
       zIndex="1000"
     >
       <AnimatePresence>
-        <motion.div className="p-4 shadow-lg bg-white max-h-[75%] max-w-[1150px] w-11/12 md:w-9/12 lg:w-1/2 text-black overflow-auto border-black border-solid border-4">
+        <motion.div
+          className="p-4 shadow-lg bg-white max-h-[75%] max-w-[1150px] w-11/12 md:w-9/12 lg:w-1/2 text-black overflow-auto border-black border-solid border-4"
+          initial={{ opacity: 0, y: -40 }}
+          animate={{ opacity: 1, y: 0, transition: { duration: 0.25 } }}
+          exit={{opacity: 0, transition: {duration: .25}}}
+        >
           <Flex justifyContent="space-between" alignItems="center" mb="4">
             <Text fontSize="4xl" fontWeight="bold">
               {title}
